@@ -1,18 +1,31 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <div class="home"></div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
+  components: {},
+
+  methods: {
+    ...mapActions({
+      getGenresList: "movies/getGenresMovies",
+      getPopularList: "movies/getPopularList",
+      getGeolocation: "geo/getGeolocation",
+    }),
+  },
+
+  async mounted() {
+    await this.getGeolocation();
+    this.getGenresList();
+    await this.getPopularList(this.region);
+  },
+  computed: {
+    ...mapState({
+      region: (state) => state.geo.region,
+    }),
   },
 };
 </script>
