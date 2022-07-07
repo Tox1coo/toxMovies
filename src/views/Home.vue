@@ -1,14 +1,26 @@
 <template>
-  <div class="home"></div>
+  <div class="home">
+    <div class="home__inner">
+      <BackDropBlockVue
+        :infoItem="
+          this.popularListFilms?.results?.concat(
+            this.popularListSerials?.results
+          )
+        "
+      ></BackDropBlockVue>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-
+import BackDropBlockVue from "@/components/BackDropBlock.vue";
 export default {
   name: "Home",
-  components: {},
-
+  components: { BackDropBlockVue },
+  data() {
+    return {};
+  },
   methods: {
     ...mapActions({
       getGenresList: "movies/getGenresMovies",
@@ -20,12 +32,24 @@ export default {
   async mounted() {
     await this.getGeolocation();
     this.getGenresList();
-    await this.getPopularList(this.region);
+    const config = {
+      region: this.region,
+    };
+    await this.getPopularList(config);
   },
   computed: {
     ...mapState({
       region: (state) => state.geo.region,
+      popularListFilms: (state) => state.movies.popularListFilms,
+      popularListSerials: (state) => state.movies.popularListSerials,
     }),
   },
 };
 </script>
+
+
+<style lang="scss" scoped>
+.home {
+  width: calc(100% - 120px);
+}
+</style>
