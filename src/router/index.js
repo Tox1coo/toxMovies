@@ -26,7 +26,7 @@ const routes = [
     component: PageItem,
   },
   {
-    path: "/tvshows/:id",
+    path: "/tv/:id",
     component: PageItem,
   },
   {

@@ -3,7 +3,7 @@
     <div class="star__body">
       <div ref="rating__active" class="star__active"></div>
       <div class="star__rating">
-        {{ vote_average }}, {{ vote_count }} <span> Отзывов</span>
+        {{ vote_average }}
       </div>
     </div>
   </div>
@@ -35,6 +35,7 @@ export default {
   font-size: 17px;
   margin-top: 15px;
   margin-bottom: 15px;
+
   color: #999;
   &__body {
     position: relative;
@@ -65,6 +66,7 @@ export default {
   }
   &__rating {
     padding-left: 5px;
+    padding-right: 15px;
   }
 }
 </style>

@@ -15,7 +15,10 @@ export const movies = {
 			popularListSerials: [],
 			serial: null,
 			film: null,
-			rating: ''
+			rating: '',
+			trendingMovieList: [],
+			trendingTVList: []
+
 		}
 	},
 
@@ -37,6 +40,12 @@ export const movies = {
 		},
 		updateRating(state, rating) {
 			state.rating = rating;
+		},
+		updateTrendingMovieList(state, trendingMovieList) {
+			state.trendingMovieList = trendingMovieList
+		},
+		updateTrendingTVList(state, trendingTVList) {
+			state.trendingTVList = trendingTVList
 		}
 	},
 
@@ -100,7 +109,7 @@ export const movies = {
 			await axios.get(`${state.BASE_URL}/tv/${id}/content_ratings?api_key=${state.API_KEY}`
 			)
 				.then(response => {
-					commit('updateRating', response.data.results[0].rating)
+					commit('updateRating', response.data.results[0]?.rating)
 				})
 				.catch(error => {
 					console.log(error);
@@ -116,6 +125,27 @@ export const movies = {
 				.then(response => {
 					commit('updateFilm', response.data)
 					commit('updateSerial', null)
+				})
+				.catch(error => {
+					console.log(error);
+				})
+		},
+		async getTrendingList({ commit, state }, config) {
+			await axios.get(`${state.BASE_URL}/trending/${config.type}/${config.time}?api_key=${state.API_KEY}`, {
+				params: {
+					language: 'ru',
+					page: config.page
+				}
+			})
+				.then(response => {
+					console.log(config.type);
+					if (config.type === 'tv') {
+						commit('updateTrendingMovieList', response.data.results)
+
+					} else if (config.type === 'movie') {
+						commit('updateTrendingTVList', response.data.results)
+
+					}
 				})
 				.catch(error => {
 					console.log(error);

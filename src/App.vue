@@ -8,6 +8,7 @@
   color: $main-color;
   background-color: $main-bgcolor;
   display: flex;
+  height: 100%;
 }
 
 *,

@@ -159,9 +159,7 @@
       </li>
     </ul>
   </nav>
-  <transition name="page">
-    <router-view />
-  </transition>
+  <router-view />
 </template>
 
 <script>
@@ -172,8 +170,11 @@ export default {
 
 <style lang="scss" scoped>
 .nav {
-  height: 100vh;
+  min-height: 100%;
   width: 120px;
+  position: fixed;
+  left: 0;
+  top: 0;
   background-color: $navbar-bgcolor;
   border-right: 1px solid rgba(#ccc, 0.2);
   &__list {

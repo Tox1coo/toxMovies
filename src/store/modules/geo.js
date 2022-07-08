@@ -17,7 +17,9 @@ export const geo = {
 		async getGeolocation({ commit }) {
 			try {
 				const geo = await axios.get('https://api.sypexgeo.net/json')
-				const region = (geo.data.region.iso.length > 2) ? geo.data.region.iso.match(/\D\D/).toString().toLowerCase() : geo.data.region.iso
+				console.log(geo.data.country.iso);
+				const region = (geo.data.region.iso.length > 2) ? geo.data.region.iso.match(/\D\D/).toString().toLowerCase() : (geo.data.region.iso.length === 2) ? geo.data.region.iso
+					: (geo.data.country.iso !== undefined) ? geo.data.country.iso : '';
 				console.log(region);
 				commit('setRegionUser', region)
 			} catch (error) {

@@ -17,12 +17,18 @@
               :vote_count="currentItem?.vote_count"
             ></Star>
             <div class="rating__info">
+              <span v-if="currentItem?.vote_count !== 0"
+                >{{ currentItem?.vote_count }} Отзывов</span
+              >
               <span v-if="this.serial != null">
-                Cезонов
-                {{ this.serial?.last_episode_to_air?.season_number }} - c
-                {{ new Date(this.serial?.first_air_date).getFullYear() }}, Cert.
-                {{ rating }}
+                Cезонов {{ this.serial?.last_episode_to_air?.season_number }}
               </span>
+              - c
+              {{
+                new Date(this.currentItem?.first_air_date).getFullYear() ||
+                new Date(this.currentItem?.release_date).getFullYear()
+              }}, Cert.
+              {{ rating }}
             </div>
           </div>
         </div>
@@ -33,8 +39,8 @@
       </div>
       <div class="backdrop__right">
         <img
-          class="backdrop__right-img"
-          :src="`${IMAGE_URL}/w780	${currentItem?.backdrop_path}`"
+          class="backdrop__right-img lazyloading"
+          :src="`${IMAGE_URL}/w780${currentItem?.backdrop_path}`"
         />
       </div>
     </div>
@@ -62,11 +68,9 @@ export default {
     try {
       setTimeout(() => {
         this.getInfoItem();
-      }, 500);
+      }, 300);
     } catch (error) {
       console.log(error);
-    } finally {
-      this.isLoading = true;
     }
   },
   methods: {
@@ -76,9 +80,23 @@ export default {
     }),
     async getInfoItem() {
       if (this.infoItem?.length > 1) {
-        this.currentItem = await this.infoItem[
-          Math.floor(0 + Math.random() * (this.infoItem.length + 1 - 0))
-        ];
+        let flag = true;
+
+        do {
+          const indexRandom = Math.floor(
+            0 + Math.random() * (this.infoItem.length + 1 - 0)
+          );
+          const random = this.infoItem[indexRandom];
+
+          if (
+            random?.backdrop_path != null &&
+            random?.backdrop_path != undefined
+          ) {
+            this.currentItem = await this.infoItem[indexRandom];
+            flag = false;
+            this.isLoading = true;
+          }
+        } while (flag);
         if (this.currentItem?.name != undefined) {
           this.getSerials(this.currentItem?.id);
         } else {
@@ -141,7 +159,7 @@ export default {
       background-image: linear-gradient(
         90deg,
         #000 0,
-        transparent 80%,
+        transparent 70%,
         transparent
       );
     }
@@ -149,6 +167,9 @@ export default {
 }
 
 .rating {
+  margin-top: 10px;
+  margin-bottom: 15px;
+
   &__inner {
     display: flex;
     align-items: center;
@@ -159,16 +180,10 @@ export default {
 
   &__info {
     font-size: 17px;
-    padding-left: 15px;
-  }
-}
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+    span {
+      margin-right: 5px;
+    }
+  }
 }
 </style>
