@@ -10,6 +10,19 @@
         alt=""
       />
     </div>
+    <div class="category__item-body">
+      <h3 class="title title--slider">
+        {{ title }}
+      </h3>
+      <Star
+        v-if="
+          categoryItem?.vote_average != 0 &&
+          categoryItem?.vote_average != undefined
+        "
+        :vote_average="categoryItem?.vote_average"
+        :vote_count="categoryItem?.vote_count"
+      ></Star>
+    </div>
   </div>
 </template>
 
@@ -17,14 +30,32 @@
 import { mapState } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      title: "",
+    };
   },
   props: {
     categoryItem: {
       type: Object,
     },
   },
-
+  mounted() {
+    setTimeout(() => {
+      if (this.categoryItem?.media_type === "tv") {
+        if (this.categoryItem?.name.length > 23) {
+          this.title = this.categoryItem?.name?.substring(0, 23) + "...";
+        } else {
+          this.title = this.categoryItem?.name;
+        }
+      } else {
+        if (this.categoryItem?.title.length > 23) {
+          this.title = this.categoryItem?.title?.substring(0, 23) + "...";
+        } else {
+          this.title = this.categoryItem?.title;
+        }
+      }
+    }, 700);
+  },
   computed: {
     ...mapState({
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
@@ -35,24 +66,41 @@ export default {
 
 <style lang="scss" scoped>
 .category__item {
-  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.4s ease 0s;
+  min-height: 450px;
   &-img {
-    width: 250px;
-    height: 350px;
     background-color: #202124;
+    cursor: pointer;
+    max-height: 324px;
+    min-width: 215px;
+    min-height: 355px;
+    max-height: 355px;
     img {
-      height: 100%;
-      width: 100%;
+      min-height: 355px;
+      max-height: 355px;
       transform: scale(1);
 
       transition: all 0.2s ease 0s;
+
+      width: 100%;
+    }
+    &:hover {
+      & img {
+        transform: scale(1.05);
+        border-radius: 25px;
+      }
     }
   }
-  &:hover {
-    & .category__item-img img {
-      transform: scale(1.02);
-      border-radius: 15px;
-    }
+  &-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
   }
 }
 </style>

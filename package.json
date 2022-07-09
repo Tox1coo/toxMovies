@@ -10,8 +10,12 @@
   "dependencies": {
     "axios": "^0.27.2",
     "core-js": "^3.6.5",
+    "swiper": "^6.8.4",
     "vue": "^3.0.0",
+    "vue-agile": "^2.0.0",
+    "vue-awesome-swiper": "^5.0.1",
     "vue-router": "^4.0.0-0",
+    "vue3-carousel": "^0.1.40",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

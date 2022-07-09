@@ -2,6 +2,13 @@
 .title {
 	color: $main-color;
 	font-size: 40px;
+
+  &--slider {
+    font-size: 14px;
+    flex: 1 0 auto;
+    margin-top: 10px;
+    height: 100%;
+  }
 }
 .text {
 	font-size: 17px;

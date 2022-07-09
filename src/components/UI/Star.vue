@@ -2,9 +2,9 @@
   <div class="star">
     <div class="star__body">
       <div ref="rating__active" class="star__active"></div>
-      <div class="star__rating">
-        {{ vote_average }}
-      </div>
+    </div>
+    <div class="star__rating">
+      {{ vote_average }}
     </div>
   </div>
 </template>
@@ -23,8 +23,7 @@ export default {
   },
   methods: {
     initialRating() {
-      console.log(this.vote_average / 0.32);
-      this.$refs.rating__active.style.width = `${this.vote_average / 0.32}%`;
+      this.$refs.rating__active.style.width = `${this.vote_average / 0.1}%`;
     },
   },
 };
@@ -33,14 +32,14 @@ export default {
 <style lang="scss" scoped>
 .star {
   font-size: 17px;
-  margin-top: 15px;
+  padding-top: 15px;
   margin-bottom: 15px;
-
+  display: flex;
   color: #999;
   &__body {
     position: relative;
+    align-items: center;
     display: flex;
-    align-items: flex-end;
     &::before {
       content: "★★★★★";
       display: block;
@@ -48,7 +47,7 @@ export default {
   }
   &__active {
     position: absolute;
-    width: 40%;
+    width: 100%;
     height: 100%;
 
     top: 0;
@@ -56,6 +55,7 @@ export default {
     overflow: hidden;
     &::before {
       content: "★★★★★";
+
       position: absolute;
       width: 100%;
       height: 100%;

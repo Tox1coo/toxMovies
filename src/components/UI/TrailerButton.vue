@@ -1,5 +1,5 @@
 <template>
-  <button class="btn__trailer">
+  <button @click="isShowTrailer(true)" class="btn__trailer">
     <svg
       width="24px"
       height="24px"
@@ -19,8 +19,14 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "TrailerButton",
+  methods: {
+    ...mapMutations({
+      isShowTrailer: "movies/isShowTrailer",
+    }),
+  },
 };
 </script>
 

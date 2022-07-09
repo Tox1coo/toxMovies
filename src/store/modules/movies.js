@@ -17,8 +17,10 @@ export const movies = {
 			film: null,
 			rating: '',
 			trendingMovieList: [],
-			trendingTVList: []
-
+			trendingTVList: [],
+			showTrailer: false,
+			videoLists: [],
+			trailerKey: ''
 		}
 	},
 
@@ -46,10 +48,24 @@ export const movies = {
 		},
 		updateTrendingTVList(state, trendingTVList) {
 			state.trendingTVList = trendingTVList
+		},
+		isShowTrailer(state, showTrailer) {
+			state.showTrailer = showTrailer
+		},
+
+		setTrailer(state, videoList) {
+			state.videoLists = videoList;
+			videoList.forEach(video => {
+				if (video.type === 'Trailer') {
+					state.trailerKey = video.key
+					return
+				}
+			});
 		}
 	},
 
 	actions: {
+		// popularList
 		async getPopularList({ commit, state }, config) {
 			console.log(config.region);
 			axios.get(`${state.BASE_URL}/movie/popular?api_key=${state.API_KEY}`, {
@@ -79,6 +95,8 @@ export const movies = {
 					console.log(error);
 				})
 		},
+
+		// genresList
 		async getGenresMovies({ commit, state }) {
 			await axios.get(`${state.BASE_URL}/genre/movie/list?api_key=${state.API_KEY}`, {
 				params: {
@@ -92,6 +110,8 @@ export const movies = {
 					console.log(error);
 				})
 		},
+
+		// getSerials
 		async getSerials({ commit, state }, id) {
 			await axios.get(`${state.BASE_URL}/tv/${id}?api_key=${state.API_KEY}`, {
 				params: {
@@ -116,6 +136,8 @@ export const movies = {
 				})
 
 		},
+
+		// getFilms
 		async getFilm({ commit, state }, id) {
 			axios.get(`${state.BASE_URL}/movie/${id}?api_key=${state.API_KEY}`, {
 				params: {
@@ -130,6 +152,8 @@ export const movies = {
 					console.log(error);
 				})
 		},
+
+		// getTrendingList
 		async getTrendingList({ commit, state }, config) {
 			await axios.get(`${state.BASE_URL}/trending/${config.type}/${config.time}?api_key=${state.API_KEY}`, {
 				params: {
@@ -150,6 +174,16 @@ export const movies = {
 				.catch(error => {
 					console.log(error);
 				})
+		},
+
+		// getTrailerVideoList
+		async getTrailerVideoList({ commit, state }, config) {
+			console.log(config);
+			await axios.get(`${state.BASE_URL}/${config.media_type}/${config.id}/videos?api_key=${state.API_KEY}`).then((response) => {
+				commit('setTrailer', response.data.results)
+			}).catch((error) => {
+				console.log(error);
+			});
 		}
 	},
 

@@ -3,7 +3,7 @@
     <div class="backdrop__inner">
       <div class="backdrop__left">
         <h1 class="title">
-          {{ this.currentItem?.title || this.currentItem?.name }}
+          {{ currentItem?.title || currentItem?.name }}
         </h1>
 
         <div class="rating">
@@ -21,12 +21,12 @@
                 >{{ currentItem?.vote_count }} Отзывов</span
               >
               <span v-if="this.serial != null">
-                Cезонов {{ this.serial?.last_episode_to_air?.season_number }}
+                Cезонов {{ serial?.last_episode_to_air?.season_number }}
               </span>
               - c
               {{
-                new Date(this.currentItem?.first_air_date).getFullYear() ||
-                new Date(this.currentItem?.release_date).getFullYear()
+                new Date(currentItem?.first_air_date).getFullYear() ||
+                new Date(currentItem?.release_date).getFullYear()
               }}, Cert.
               {{ rating }}
             </div>
