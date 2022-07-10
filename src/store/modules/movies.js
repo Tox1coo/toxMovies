@@ -8,7 +8,7 @@ export const movies = {
 		return {
 			API_KEY: 'd7083550b43318a344ca78678b536326',
 			BASE_URL: 'https://api.themoviedb.org/3',
-			IMAGE_URL: 'https://image.tmdb.org/t/p', // надо будет придумать как сделать загрузку определенного размера п.с. смотреть документацию в конфигурации
+			IMAGE_URL: 'https://image.tmdb.org/t/p',
 			SEARCH_URL: 'https://api.themoviedb.org/3/search/movie?api_key=',
 			popularListFilms: [],
 			genresList: [],
@@ -44,10 +44,10 @@ export const movies = {
 			state.rating = rating;
 		},
 		updateTrendingMovieList(state, trendingMovieList) {
-			state.trendingMovieList = trendingMovieList
+			state.trendingMovieList = state.trendingMovieList.concat(trendingMovieList)
 		},
 		updateTrendingTVList(state, trendingTVList) {
-			state.trendingTVList = trendingTVList
+			state.trendingTVList = state.trendingTVList.concat(trendingTVList)
 		},
 		isShowTrailer(state, showTrailer) {
 			state.showTrailer = showTrailer
@@ -55,12 +55,14 @@ export const movies = {
 
 		setTrailer(state, videoList) {
 			state.videoLists = videoList;
-			videoList.forEach(video => {
-				if (video.type === 'Trailer') {
-					state.trailerKey = video.key
-					return
-				}
-			});
+			const indexTrailer = videoList.findIndex((video) => video.type === 'Trailer');
+			console.log(indexTrailer);
+			if (indexTrailer !== -1) {
+				state.trailerKey = videoList[indexTrailer].key;
+			} else if (videoList.length > 0) {
+				state.trailerKey = videoList[0].key;
+			}
+
 		}
 	},
 
@@ -163,10 +165,10 @@ export const movies = {
 			})
 				.then(response => {
 					console.log(config.type);
-					if (config.type === 'tv') {
+					if (config.type === 'movie') {
 						commit('updateTrendingMovieList', response.data.results)
 
-					} else if (config.type === 'movie') {
+					} else if (config.type === 'tv') {
 						commit('updateTrendingTVList', response.data.results)
 
 					}

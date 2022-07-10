@@ -6,10 +6,12 @@ import components from "@/components/UI";
 import '@/assets/_variables.scss'
 import '@/assets/UI.scss'
 
+
 const app = createApp(App);
 
 components.forEach((component) => {
 	app.component(component.name, component);
 });
+
 
 app.use(store).use(router).mount("#app");

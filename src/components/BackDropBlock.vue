@@ -27,8 +27,7 @@
               {{
                 new Date(currentItem?.first_air_date).getFullYear() ||
                 new Date(currentItem?.release_date).getFullYear()
-              }}, Cert.
-              {{ rating }}
+              }}, <span v-if="rating">Cert. {{ rating }}</span>
             </div>
           </div>
         </div>
@@ -69,6 +68,20 @@ export default {
       setTimeout(() => {
         this.getInfoItem();
       }, 300);
+      const config = {};
+
+      setTimeout(() => {
+        if (this.serial != null) {
+          config.media_type = "tv";
+          config.language = "ru";
+          config.id = this.serial.id;
+        } else {
+          config.media_type = "movie";
+          config.language = "ru";
+          config.id = this.film.id;
+        }
+        this.getTrailerVideoList(config);
+      }, 1000);
     } catch (error) {
       console.log(error);
     }
@@ -77,11 +90,11 @@ export default {
     ...mapActions({
       getSerials: "movies/getSerials",
       getFilm: "movies/getFilm",
+      getTrailerVideoList: "movies/getTrailerVideoList",
     }),
     async getInfoItem() {
       if (this.infoItem?.length > 1) {
         let flag = true;
-
         do {
           const indexRandom = Math.floor(
             0 + Math.random() * (this.infoItem.length + 1 - 0)
@@ -102,6 +115,8 @@ export default {
         } else {
           this.getFilm(this.currentItem?.id);
         }
+      } else {
+        this.currentItem = await this.infoItem;
       }
     },
   },
@@ -110,6 +125,7 @@ export default {
       serial: (state) => state.movies.serial,
       film: (state) => state.movies.film,
       rating: (state) => state.movies.rating,
+
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
     }),
   },

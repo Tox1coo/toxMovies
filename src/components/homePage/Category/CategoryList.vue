@@ -94,7 +94,10 @@ export default {
   },
   components: { CategoryItem, Swiper, SwiperSlide },
   mounted() {
-    document.querySelector(".swiper-button-prev").style.opacity = "0";
+    document.querySelectorAll(".swiper-button-prev").forEach((element) => {
+      element.style.cssText = "opacity: 0 !important; visibility: hidden";
+    });
+
     console.log("The Unbearable Weight of Mas".length);
   },
   methods: {

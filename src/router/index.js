@@ -4,8 +4,7 @@ import Movies from "@/views/Movies.vue";
 import TVShows from "@/views/TVShows.vue";
 import PageItem from "@/views/PageItem.vue";
 import Search from "@/views/Search.vue";
-
-
+import Category from "@/views/Category.vue";
 
 const routes = [
   {
@@ -22,17 +21,21 @@ const routes = [
     component: TVShows,
   },
   {
-    path: "/movie/:id",
+    path: "/:media/:id",
     component: PageItem,
   },
   {
-    path: "/tv/:id",
+    path: "/:media/:id",
     component: PageItem,
   },
   {
     path: "/search",
     component: Search,
   },
+  {
+    path: "/:media/category/:type",
+    component: Category,
+  }
 ];
 
 const router = createRouter({

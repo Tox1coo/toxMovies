@@ -1,6 +1,6 @@
 <template>
-  <Transition name="slidedown">
-    <div v-if="show" @click.stop="isShowTrailer(false)" class="modal">
+  <div v-if="show" @click.stop="isShowTrailer(false)" class="modal">
+    <Transition name="slidedown">
       <div @click.stop class="modal__inner">
         <iframe
           width="100%"
@@ -12,8 +12,8 @@
           allowfullscreen
         ></iframe>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </div>
 </template>
 
 <script>
@@ -26,32 +26,12 @@ export default {
     ...mapMutations({
       isShowTrailer: "movies/isShowTrailer",
     }),
-    ...mapActions({
-      getTrailerVideoList: "movies/getTrailerVideoList",
-    }),
   },
   mixins: [toggleMixin],
   computed: {
     ...mapState({
-      serial: (state) => state.movies.serial,
-      film: (state) => state.movies.film,
       trailerKey: (state) => state.movies.trailerKey,
     }),
-  },
-  async created() {
-    const config = {};
-    setTimeout(() => {
-      if (this.serial != null) {
-        config.media_type = "tv";
-        config.language = "ru";
-        config.id = this.serial.id;
-      } else {
-        config.media_type = "movie";
-        config.language = "ru";
-        config.id = this.film.id;
-      }
-      this.getTrailerVideoList(config);
-    }, 1000);
   },
 };
 </script>
@@ -85,14 +65,14 @@ iframe {
 }
 
 .slidedown-enter-active {
-  transition: all 0.3s ease;
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slidedown-leave-active {
   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.slidedown-enter {
-  opacity: 1;
+.slidedown-enter-to {
+  top: 50px;
 }
 .slidedown-leave-to {
   opacity: 0;
