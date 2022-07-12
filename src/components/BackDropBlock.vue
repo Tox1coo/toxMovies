@@ -1,6 +1,6 @@
 <template>
   <div class="backdrop">
-    <div class="backdrop__inner">
+    <div v-if="isLoading" class="backdrop__inner">
       <div class="backdrop__left">
         <h1 class="title">
           {{ currentItem?.title || currentItem?.name }}
@@ -27,7 +27,8 @@
               {{
                 new Date(currentItem?.first_air_date).getFullYear() ||
                 new Date(currentItem?.release_date).getFullYear()
-              }}, <span v-if="rating">Cert. {{ rating }}</span>
+              }}
+              <span v-if="rating">, Cert. {{ rating }}</span>
             </div>
           </div>
         </div>
@@ -61,13 +62,12 @@ export default {
   props: {
     infoItem: {
       type: [Array, Object],
+      default: () => {},
     },
   },
   async mounted() {
     try {
-      setTimeout(() => {
-        this.getInfoItem();
-      }, 300);
+      await this.getInfoItem();
       const config = {};
 
       setTimeout(() => {
@@ -93,30 +93,35 @@ export default {
       getTrailerVideoList: "movies/getTrailerVideoList",
     }),
     async getInfoItem() {
-      if (this.infoItem?.length > 1) {
-        let flag = true;
-        do {
-          const indexRandom = Math.floor(
-            0 + Math.random() * (this.infoItem.length + 1 - 0)
-          );
-          const random = this.infoItem[indexRandom];
+      try {
+        if (this.infoItem?.length > 1) {
+          let flag = true;
+          do {
+            const indexRandom = Math.floor(
+              0 + Math.random() * (this.infoItem.length + 1 - 0)
+            );
+            const random = this.infoItem[indexRandom];
 
-          if (
-            random?.backdrop_path != null &&
-            random?.backdrop_path != undefined
-          ) {
-            this.currentItem = await this.infoItem[indexRandom];
-            flag = false;
-            this.isLoading = true;
+            if (
+              random?.backdrop_path != null &&
+              random?.backdrop_path != undefined
+            ) {
+              this.currentItem = this.infoItem[indexRandom];
+              flag = false;
+            }
+          } while (flag);
+          if (this.currentItem?.name != undefined) {
+            await this.getSerials(this.currentItem?.id);
+          } else {
+            await this.getFilm(this.currentItem?.id);
           }
-        } while (flag);
-        if (this.currentItem?.name != undefined) {
-          this.getSerials(this.currentItem?.id);
         } else {
-          this.getFilm(this.currentItem?.id);
+          this.currentItem = this.infoItem;
         }
-      } else {
-        this.currentItem = await this.infoItem;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = true;
       }
     },
   },

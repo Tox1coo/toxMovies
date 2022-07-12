@@ -3,10 +3,15 @@
     <div class="category__link">
       <h2>
         {{ typeCategory }}
-        <span v-if="mediaTypeList[0]?.media_type === 'movie'"> Movie</span>
-        <span v-else>TV Shows</span> of week
+        <span v-if="mediaTypeList[0]?.media_type === 'movie'">
+          Movie of week</span
+        >
+        <span v-else-if="mediaTypeList[0]?.media_type === 'tv'"
+          >TV Shows of week</span
+        >
       </h2>
       <a
+        v-if="showIsAll"
         @click="
           $router.push(
             `${
@@ -27,6 +32,7 @@
       @transitionEnd="onSwipe"
     >
       <swiper-slide
+        ref="swipeItem"
         v-for="categoryItem in mediaTypeList"
         :key="categoryItem.id"
       >
@@ -34,6 +40,7 @@
       ></swiper-slide>
       <swiper-slide>
         <a
+          v-if="showIsAll"
           @click="
             $router.push(
               `${
@@ -48,10 +55,7 @@
     </swiper>
   </div>
 </template>
-      @mousedown="sliderDragOut($event)"
-      @touchdown="sliderDragOut($event)"
-      @touchmove="dragMove($event)"
-      @mousemove="dragMove($event)"
+
 <script>
 /*  eslint-disable no-unused-vars  */
 
@@ -78,27 +82,31 @@ import CategoryItem from "@/components/homePage/Category/CategoryItem.vue";
 export default {
   data() {
     return {
-      pressed: false,
-      cursorXSpace: 0,
       viewItemSlide: 0,
-      maxSlides: 0,
       currentSlide: 0,
-      check: 0,
-      currentIndex: 0.3,
+      slidesPerGroup: 0,
       checkLeft: false,
     };
   },
   props: {
     mediaTypeList: Array,
     typeCategory: String,
+    showIsAll: {
+      type: Boolean,
+      default: true,
+    },
   },
   components: { CategoryItem, Swiper, SwiperSlide },
   mounted() {
     document.querySelectorAll(".swiper-button-prev").forEach((element) => {
       element.style.cssText = "opacity: 0 !important; visibility: hidden";
     });
-
-    console.log("The Unbearable Weight of Mas".length);
+    /*     const viewItemSlide = this.mediaTypeList.length / 2;
+    this.viewItemSlide = viewItemSlide;
+    this.slidesPerGroup = Math.floor(this.mediaTypeList.length / 2);
+    setTimeout(() => {
+      console.log(this.$refs.swipeItem);
+    }, 500); */
   },
   methods: {
     onSwipe(swipe) {
@@ -122,7 +130,6 @@ export default {
   },
   watch: {
     currentSlide(newCurrent) {
-      console.log(newCurrent);
       if (newCurrent === 0) {
         this.checkLeft = false;
       }

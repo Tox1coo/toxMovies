@@ -22,26 +22,50 @@ export default {
   props: {
     tabsList: Array,
     currentTab: Object,
+    prevId: Object,
   },
   emits: ["setCurrentTab"],
   mounted() {
     setTimeout(() => {
       this.$refs.tabsItem.forEach((tab) => {
         if (this.currentTab.id === +tab.getAttribute("data-index")) {
-          tab.classList.add("active");
+          if (+tab.getAttribute("data-index") < this.prevId.id) {
+            tab.classList.add("active--anim");
+            console.log(this.prevId);
+            console.log(tab);
+          } else {
+            tab.classList.add("active");
+          }
         } else {
-          tab.classList.remove("active");
+          if (+tab.getAttribute("data-index") < this.prevId.id) {
+            tab.classList.remove("active--anim");
+          } else {
+            tab.classList.remove("active--anim");
+
+            tab.classList.remove("active");
+          }
         }
       });
-    }, 100);
+    }, 500);
   },
   watch: {
     currentTab(newCurrentTab) {
       this.$refs.tabsItem.forEach((tab) => {
         if (newCurrentTab.id === +tab.getAttribute("data-index")) {
-          tab.classList.add("active");
+          if (this.currentTab.id < this.prevId.id) {
+            tab.classList.add("active--anim");
+            console.log(this.prevId);
+            console.log(tab);
+          } else {
+            tab.classList.add("active");
+          }
         } else {
-          tab.classList.remove("active");
+          if (+tab.getAttribute("data-index") < this.prevId.id) {
+            tab.classList.remove("active--anim");
+          } else {
+            tab.classList.remove("active");
+            tab.classList.remove("active--anim");
+          }
         }
       });
     },
@@ -73,7 +97,7 @@ export default {
 .active {
   color: $main-color;
   &::after {
-    animation: activeTab 0.2s ease-in;
+    animation: activeTab 0.2s ease-in-out;
     content: " ";
     display: block;
     width: 100%;
@@ -81,14 +105,34 @@ export default {
     margin-top: 5px;
     background-color: $main-color;
   }
+  &--anim {
+    &::after {
+      animation: prevActiveTab 0.2s ease-in-out;
+      content: " ";
+      display: block;
+      width: 100%;
+      height: 3px;
+      margin-top: 5px;
+      background-color: $main-color;
+    }
+  }
 }
 
 @keyframes activeTab {
   0% {
-    transform: translateX(-50px);
+    transform: translateX(-100px);
   }
   100% {
-    transform: translateY(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes prevActiveTab {
+  0% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translateX(0);
   }
 }
 </style>

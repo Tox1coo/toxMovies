@@ -5,8 +5,18 @@
 
   &--slider {
     font-size: 14px;
-    flex: 1 0 auto;
     margin-top: 10px;
+  }
+  &--page {
+    font-size: 33px;
+  }
+}
+
+.subtitle {
+  font-size: 20px;
+  color: #ccc;
+  &--slider {
+    font-size: 13px;
   }
 }
 .text {

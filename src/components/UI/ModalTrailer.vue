@@ -19,7 +19,7 @@
 <script>
 /*  eslint-disable no-unused-vars  */
 import toggleMixin from "@/mixins/toggleMixins";
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "ModalTrailer",
   methods: {
@@ -55,7 +55,7 @@ export default {
     border-radius: 24px;
 
     width: 1500px;
-    height: 700px;
+    height: 900px;
     cursor: default;
     display: flex;
   }

@@ -175,6 +175,7 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
+  z-index: 1000;
   background-color: $navbar-bgcolor;
   border-right: 1px solid rgba(#ccc, 0.2);
   &__list {

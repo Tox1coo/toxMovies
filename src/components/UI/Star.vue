@@ -4,7 +4,7 @@
       <div ref="rating__active" class="star__active"></div>
     </div>
     <div class="star__rating">
-      {{ vote_average }}
+      {{ vote_average.toPrecision(2) }}
     </div>
   </div>
 </template>
@@ -35,6 +35,7 @@ export default {
   padding-top: 15px;
   margin-bottom: 15px;
   display: flex;
+  align-items: flex-end;
   color: #999;
   &__body {
     position: relative;

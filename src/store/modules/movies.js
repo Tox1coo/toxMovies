@@ -20,7 +20,8 @@ export const movies = {
 			trendingTVList: [],
 			showTrailer: false,
 			videoLists: [],
-			trailerKey: ''
+			trailerKey: '',
+			creditsItem: {}
 		}
 	},
 
@@ -62,7 +63,9 @@ export const movies = {
 			} else if (videoList.length > 0) {
 				state.trailerKey = videoList[0].key;
 			}
-
+		},
+		setCreditsItem(state, creditsItem) {
+			state.creditsItem = creditsItem;
 		}
 	},
 
@@ -149,6 +152,7 @@ export const movies = {
 				.then(response => {
 					commit('updateFilm', response.data)
 					commit('updateSerial', null)
+					commit('updateRating', '')
 				})
 				.catch(error => {
 					console.log(error);
@@ -186,6 +190,15 @@ export const movies = {
 			}).catch((error) => {
 				console.log(error);
 			});
+		},
+
+		// getCreditsInfo
+		async getCreditsInfo({ commit, state }, config) {
+			await axios.get(`${state.BASE_URL}/${config.media_type}/${config.id}/credits?api_key=${state.API_KEY}`).then((response) => {
+				commit('setCreditsItem', response.data)
+			}).catch((error) => {
+				console.log(error);
+			})
 		}
 	},
 

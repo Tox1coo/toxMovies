@@ -1,12 +1,22 @@
 <template>
   <div class="category__item">
     <div
-      @click="$router.push(`/${categoryItem.media_type}/${categoryItem.id}`)"
+      @click="
+        $router.push(
+          `/${categoryItem.media_type || 'person'}/${categoryItem.id}`
+        )
+      "
       class="category__item-img"
     >
       <img
+        v-if="this.categoryItem?.media_type != undefined"
         class="lazyloading"
         :src="`${IMAGE_URL}/w342/${categoryItem?.poster_path}`"
+        alt=""
+      /><img
+        v-else
+        class="lazyloading"
+        :src="`${IMAGE_URL}/w342/${categoryItem?.profile_path}`"
         alt=""
       />
     </div>
@@ -14,6 +24,12 @@
       <h3 class="title title--slider">
         {{ title }}
       </h3>
+      <h2
+        class="subtitle subtitle--slider"
+        v-if="this.categoryItem?.media_type == undefined"
+      >
+        {{ subtitle }}
+      </h2>
       <Star
         v-if="
           categoryItem?.vote_average != 0 &&
@@ -32,6 +48,7 @@ export default {
   data() {
     return {
       title: "",
+      subtitle: "",
     };
   },
   props: {
@@ -47,12 +64,15 @@ export default {
         } else {
           this.title = this.categoryItem?.name;
         }
-      } else {
-        if (this.categoryItem?.title.length > 23) {
+      } else if (this.categoryItem?.media_type === "movie") {
+        if (this.categoryItem?.title?.length > 23) {
           this.title = this.categoryItem?.title?.substring(0, 23) + "...";
         } else {
           this.title = this.categoryItem?.title;
         }
+      } else {
+        this.title = this.categoryItem?.name;
+        this.subtitle = this.categoryItem?.character;
       }
     }, 700);
   },

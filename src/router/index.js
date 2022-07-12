@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
 import Movies from "@/views/Movies.vue";
 import TVShows from "@/views/TVShows.vue";
+import PagePerson from "@/views/PagePerson.vue";
 import PageItem from "@/views/PageItem.vue";
 import Search from "@/views/Search.vue";
 import Category from "@/views/Category.vue";
@@ -31,6 +32,10 @@ const routes = [
   {
     path: "/search",
     component: Search,
+  },
+  {
+    path: "/person/:id",
+    component: PagePerson,
   },
   {
     path: "/:media/category/:type",
