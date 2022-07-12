@@ -4,7 +4,9 @@ import TrailerButton from '@/components/UI/TrailerButton'
 import Footer from '@/components/UI/Footer'
 import ModalTrailer from '@/components/UI/ModalTrailer'
 import Tabs from '@/components/UI/Tabs'
-
+import DropList from '@/components/UI/DropList'
+import ModalSlider from '@/components/UI/ModalSlider'
+import ModalSliderItem from '@/components/UI/ModalSliderItem'
 
 
 export default [
@@ -13,5 +15,8 @@ export default [
 	TrailerButton,
 	Footer,
 	Tabs,
-	ModalTrailer
+	ModalTrailer,
+	DropList,
+	ModalSlider,
+	ModalSliderItem
 ]

@@ -21,11 +21,16 @@ export const movies = {
 			showTrailer: false,
 			videoLists: [],
 			trailerKey: '',
-			creditsItem: {}
+			creditsItem: {},
+			similarList: [],
+			selectedSort: 'All'
 		}
 	},
 
 	mutations: {
+		updateSelectedSort(state, selectedSort) {
+			state.selectedSort = selectedSort
+		},
 		updateGenresList(state, genresList) {
 			state.genresList = genresList
 		},
@@ -64,11 +69,32 @@ export const movies = {
 				state.trailerKey = videoList[0].key;
 			}
 		},
+
 		setCreditsItem(state, creditsItem) {
 			state.creditsItem = creditsItem;
+		},
+
+		setSimilarList(state, similarList) {
+			if (state?.serial != null) {
+				state.similarList = similarList.filter(similar => similar.id !== state.serial?.id);
+
+			} else {
+				state.similarList = similarList.filter(similar => similar.id !== state.film?.id);
+
+			}
 		}
 	},
-
+	getters: {
+		sortedVideos(state) {
+			return [...state.videoLists].filter(video => {
+				if (state.selectedSort === 'All') {
+					return state.videoLists
+				} else {
+					return video.type === state.selectedSort
+				}
+			})
+		}
+	},
 	actions: {
 		// popularList
 		async getPopularList({ commit, state }, config) {
@@ -196,6 +222,19 @@ export const movies = {
 		async getCreditsInfo({ commit, state }, config) {
 			await axios.get(`${state.BASE_URL}/${config.media_type}/${config.id}/credits?api_key=${state.API_KEY}`).then((response) => {
 				commit('setCreditsItem', response.data)
+			}).catch((error) => {
+				console.log(error);
+			})
+		},
+
+		// getSimilar
+		async getSimilar({ commit, state }, config) {
+			await axios.get(`${state.BASE_URL}/${config.media_type}/${config.id}/similar?api_key=${state.API_KEY}`, {
+				params: {
+					language: 'ru'
+				}
+			}).then((response) => {
+				commit('setSimilarList', response.data.results)
 			}).catch((error) => {
 				console.log(error);
 			})

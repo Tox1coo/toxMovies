@@ -9,20 +9,34 @@
         :prevId="prevTab"
       ></Tabs>
       <div class="page__info">
-        <OverviewBlock
-          :overviewItem="pageItem"
-          :director="directoryFilm"
-          :castList="castList"
-        ></OverviewBlock>
+        <transition-group name="info">
+          <OverviewBlock
+            v-if="currentTab.title === 'Overview'"
+            :overviewItem="pageItem"
+            :director="directoryFilm"
+            :castList="castList"
+          ></OverviewBlock>
+        </transition-group>
+
+        <transition name="info">
+          <VideoBlock v-if="currentTab.title === 'Videos'"></VideoBlock>
+        </transition>
       </div>
+      <CategoryList
+        :mediaTypeList="similarList"
+        :showIsAll="false"
+        :typeCategory="'Посмотреть еще'"
+      ></CategoryList>
     </div>
   </div>
 </template>
-
+<!-- TODO: проверить правильность выбора трейлера после перехода по ссылке на фильмах и сериалах 'Посмотреть еще' -->
 <script>
 import BackDropBlock from "@/components/BackDropBlock";
 import { mapActions, mapState } from "vuex";
 import OverviewBlock from "@/components/homePage/PageType/OverviewBlock.vue";
+import CategoryList from "@/components/homePage/Category/CategoryList.vue";
+import VideoBlock from "@/components/homePage/PageType/VideoBlock.vue";
 export default {
   name: "PageItem",
   data() {
@@ -44,12 +58,13 @@ export default {
       directoryFilm: {},
     };
   },
-  components: { BackDropBlock, OverviewBlock },
+  components: { BackDropBlock, OverviewBlock, CategoryList, VideoBlock },
   methods: {
     ...mapActions({
       getFilm: "movies/getFilm",
       getSerials: "movies/getSerials",
       getCreditsInfo: "movies/getCreditsInfo",
+      getSimilar: "movies/getSimilar",
     }),
     setCurrentTab(currentTab) {
       this.prevTab = this.currentTab;
@@ -70,8 +85,8 @@ export default {
             { title: "Photos", id: 3 },
           ];
           const config = {
-            media_type: "tv",
-            id: this.serial.id,
+            media_type: this.media,
+            id: this.id,
           };
           await this.getCreditsInfo(config);
           await this.getOverviewInfo();
@@ -90,8 +105,8 @@ export default {
           setTimeout(async () => {
             this.pageItem = this.film;
             const config = {
-              media_type: "movie",
-              id: this.film.id,
+              media_type: this.media,
+              id: this.id,
             };
             await this.getCreditsInfo(config);
             await this.getOverviewInfo();
@@ -102,25 +117,69 @@ export default {
         console.log(error);
       }
     },
-    getOverviewInfo() {
+    async getOverviewInfo() {
       this.castList = this.creditsItem.cast;
-      this.directoryFilm = this.creditsItem.crew.filter(
+      this.directoryFilm = await this.creditsItem.crew.filter(
         (crewPerson) => crewPerson.job === "Director"
       );
+      const config = {
+        media_type: this.media,
+        id: this.id,
+      };
+      await this.getSimilar(config);
+    },
+    resetData() {
+      this.currentTab = {
+        title: "Overview",
+        id: 0,
+      };
+      this.prevTab = this.currentTab;
     },
   },
+
   async created() {
     this.getItem();
+  },
+  updated() {
+    this.id = this.$route.params.id;
   },
   computed: {
     ...mapState({
       film: (state) => state.movies.film,
       serial: (state) => state.movies.serial,
       creditsItem: (state) => state.movies.creditsItem,
+      similarList: (state) => state.movies.similarList,
     }),
+  },
+  watch: {
+    id() {
+      this.resetData();
+
+      this.getItem();
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.page {
+  overflow: hidden;
+}
+.info-enter-active {
+  animation: info 0.5s;
+}
+.info-leave-active {
+  animation: info 0.5s easy;
+}
+
+@keyframes info {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 </style>

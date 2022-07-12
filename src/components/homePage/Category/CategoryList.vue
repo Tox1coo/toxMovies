@@ -1,5 +1,5 @@
 <template>
-  <div class="category">
+  <div ref="list" class="category">
     <div class="category__link">
       <h2>
         {{ typeCategory }}
@@ -59,9 +59,6 @@
 <script>
 /*  eslint-disable no-unused-vars  */
 
-// Import Swiper Vue.js components
-
-// Import Swiper styles
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 // swiper bundle styles
@@ -107,6 +104,7 @@ export default {
     setTimeout(() => {
       console.log(this.$refs.swipeItem);
     }, 500); */
+    console.log(this.mediaTypeList);
   },
   methods: {
     onSwipe(swipe) {
@@ -138,7 +136,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .category {
   padding-left: 50px;
   margin-right: 50px;

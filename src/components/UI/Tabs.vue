@@ -31,8 +31,6 @@ export default {
         if (this.currentTab.id === +tab.getAttribute("data-index")) {
           if (+tab.getAttribute("data-index") < this.prevId.id) {
             tab.classList.add("active--anim");
-            console.log(this.prevId);
-            console.log(tab);
           } else {
             tab.classList.add("active");
           }
@@ -41,7 +39,6 @@ export default {
             tab.classList.remove("active--anim");
           } else {
             tab.classList.remove("active--anim");
-
             tab.classList.remove("active");
           }
         }
@@ -54,17 +51,17 @@ export default {
         if (newCurrentTab.id === +tab.getAttribute("data-index")) {
           if (this.currentTab.id < this.prevId.id) {
             tab.classList.add("active--anim");
-            console.log(this.prevId);
-            console.log(tab);
           } else {
+            if (tab.classList.contains("active")) return;
             tab.classList.add("active");
           }
         } else {
           if (+tab.getAttribute("data-index") < this.prevId.id) {
             tab.classList.remove("active--anim");
           } else {
-            tab.classList.remove("active");
+            console.log(tab);
             tab.classList.remove("active--anim");
+            tab.classList.remove("active");
           }
         }
       });
@@ -106,6 +103,8 @@ export default {
     background-color: $main-color;
   }
   &--anim {
+    color: $main-color;
+
     &::after {
       animation: prevActiveTab 0.2s ease-in-out;
       content: " ";

@@ -230,6 +230,7 @@ export default {
     padding: 50px;
     padding-top: 30px;
   }
+  margin-bottom: 25px;
 }
 .info {
   margin-left: 50px;

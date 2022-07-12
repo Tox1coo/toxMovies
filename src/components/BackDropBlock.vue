@@ -134,6 +134,22 @@ export default {
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
     }),
   },
+  watch: {
+    infoItem(newInfoItem) {
+      this.getInfoItem();
+      const config = {};
+      if (this.serial != null) {
+        config.media_type = "tv";
+        config.language = "ru";
+        config.id = this.serial.id;
+      } else {
+        config.media_type = "movie";
+        config.language = "ru";
+        config.id = this.film.id;
+      }
+      this.getTrailerVideoList(config);
+    },
+  },
 };
 </script>
 
@@ -156,6 +172,7 @@ export default {
     z-index: 1000;
     padding-top: 150px;
     padding-left: 50px;
+    animation: loading 0.7s ease-in-out;
   }
 
   &__right {
@@ -205,6 +222,17 @@ export default {
     span {
       margin-right: 5px;
     }
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateY(100px);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
   }
 }
 </style>
