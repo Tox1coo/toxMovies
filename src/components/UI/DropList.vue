@@ -36,6 +36,7 @@ export default {
   methods: {
     ...mapMutations({
       updateSelectedSort: "movies/updateSelectedSort",
+      updateSelectedSeason: "movies/updateSelectedSeason",
     }),
     setSearchList(element) {
       this.updateSelectedSort(element.target.value);

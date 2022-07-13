@@ -6,6 +6,9 @@
   &--slider {
     font-size: 14px;
     margin-top: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   &--page {
     font-size: 33px;
@@ -14,7 +17,11 @@
 
   &--image {
     font-size: 25px;
+  }
 
+  &--season {
+    font-size: 18px;
+    margin-top: 10px;
   }
 }
 
@@ -29,6 +36,10 @@
 
 .text {
 	font-size: 17px;
+  &--episode {
+    font-size: 13px;
+    color: #999;
+  }
 }
 
 .lazyloading {

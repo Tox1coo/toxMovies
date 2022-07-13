@@ -26,7 +26,8 @@ export const movies = {
 			imagesList: [],
 			selectedSort: 'All',
 			seasonInfo: [],
-			selectedSeason: 1
+			isLoading: false,
+			topRatedList: []
 		}
 	},
 
@@ -37,11 +38,25 @@ export const movies = {
 		updateGenresList(state, genresList) {
 			state.genresList = genresList
 		},
+		updateTopRatedList(state, topRated) {
+			console.log(topRated.media);
+			topRated.list.forEach(element => {
+				element.media_type = topRated.media
+			});
+			state.topRatedList = state.topRatedList.concat(topRated.list)
+		},
+
 		updatePopularListFilms(state, popularListFilms) {
-			state.popularListFilms = popularListFilms
+			popularListFilms.results.forEach(element => {
+				element.media_type = 'movie'
+			});
+			state.popularListFilms = state.popularListFilms.concat(popularListFilms.results)
 		},
 		updatePopularListSerials(state, popularListSerials) {
-			state.popularListSerials = popularListSerials
+			popularListSerials.results.forEach(element => {
+				element.media_type = 'tv'
+			});
+			state.popularListSerials = state.popularListSerials.concat(popularListSerials.results)
 		},
 		updateSerial(state, serial) {
 			state.serial = serial
@@ -93,11 +108,17 @@ export const movies = {
 		},
 
 		setSeasonInfo(state, seasonInfo) {
-			state.seasonInfo.push(seasonInfo)
+			if (!state.seasonInfo.includes(seasonInfo.id)) {
+				state.seasonInfo.push(seasonInfo)
+			}
 		},
 
-		updateSelectedSeason(state, selectedSeason) {
-			state.selectedSeason = selectedSeason
+		setIsLoading(state, isLoading) {
+			state.isLoading = isLoading
+		},
+
+		clearSeasonInfo(state) {
+			state.seasonInfo = []
 		}
 	},
 	getters: {
@@ -110,20 +131,11 @@ export const movies = {
 				}
 			})
 		},
-		sortedSeason(state) {
-			return [...state.seasonInfo].filter(season => {
-				if (state.selectedSeason === 'All') {
-					return state.seasonInfo
-				} else {
-					return season.season_number === state.selectedSeason
-				}
-			})
-		}
+
 	},
 	actions: {
 		// popularList
 		async getPopularList({ commit, state }, config) {
-			console.log(config.region);
 			axios.get(`${state.BASE_URL}/movie/popular?api_key=${state.API_KEY}`, {
 				params: {
 					language: 'ru',
@@ -146,6 +158,22 @@ export const movies = {
 			})
 				.then(response => {
 					commit('updatePopularListSerials', response.data)
+				})
+				.catch(error => {
+					console.log(error);
+				})
+		},
+
+		async getTopRatedList({ commit, state }, config) {
+			axios.get(`${state.BASE_URL}/${config.media}/top_rated?api_key=${state.API_KEY}`, {
+				params: {
+					language: 'ru',
+					region: config.region,
+					page: config.page || 1
+				}
+			})
+				.then(response => {
+					commit('updateTopRatedList', { list: response.data.results, media: config.media })
 				})
 				.catch(error => {
 					console.log(error);
@@ -279,9 +307,12 @@ export const movies = {
 			});
 		},
 
+		// getSeasonsInfo
 		async getSeasonsInfo({ commit, state }) {
 			console.log(state.serial.id);
 			const serialSeasons = state.serial.number_of_seasons
+			commit('clearSeasonInfo')
+
 			for (let index = 0; index < serialSeasons; index++) {
 				await axios.get(`${state.BASE_URL}/tv/${state.serial.id}/season/${index + 1}?api_key=${state.API_KEY}`,
 					{
@@ -289,6 +320,7 @@ export const movies = {
 							language: 'ru'
 						}
 					}).then((response) => {
+
 						commit('setSeasonInfo', response.data)
 					}).catch(error => {
 						console.log(error);

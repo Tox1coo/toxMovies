@@ -17,6 +17,7 @@
         ></OverviewBlock>
         <VideoBlock v-if="currentTab.title === 'Videos'"></VideoBlock>
         <ImagesBlock v-if="currentTab.title === 'Photos'"></ImagesBlock>
+        <SeasonBlock v-if="currentTab.title === 'Seasons'"></SeasonBlock>
       </div>
       <CategoryList
         :mediaTypeList="similarList"
@@ -35,6 +36,7 @@ import OverviewBlock from "@/components/homePage/PageType/OverviewBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 import VideoBlock from "@/components/homePage/PageType/VideoBlock.vue";
 import ImagesBlock from "@/components/homePage/PageType/ImagesBlock.vue";
+import SeasonBlock from "../components/homePage/PageType/SeasonBlock.vue";
 export default {
   name: "PageItem",
   data() {
@@ -62,6 +64,7 @@ export default {
     CategoryList,
     VideoBlock,
     ImagesBlock,
+    SeasonBlock,
   },
   methods: {
     ...mapActions({
@@ -86,7 +89,7 @@ export default {
               title: "Overview",
               id: 0,
             },
-            { title: "Episodes", id: 1 },
+            { title: "Seasons", id: 1 },
             { title: "Videos", id: 2 },
             { title: "Photos", id: 3 },
           ];

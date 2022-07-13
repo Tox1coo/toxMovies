@@ -10,15 +10,7 @@
           >TV Shows of week</span
         >
       </h2>
-      <a
-        v-if="showIsAll && mediaTypeList.length > 0"
-        @click="
-          $router.push(
-            `${
-              mediaTypeList[0].media_type
-            }/category/${typeCategory.toLowerCase()}`
-          )
-        "
+      <a v-if="showIsAll && mediaTypeList.length > 0" @click="getLink()"
         >Показать все</a
       >
     </div>
@@ -40,16 +32,7 @@
         <CategoryItem :categoryItem="categoryItem"></CategoryItem
       ></swiper-slide>
       <swiper-slide>
-        <a
-          v-if="showIsAll"
-          @click="
-            $router.push(
-              `${
-                mediaTypeList[0].media_type
-              }/category/${typeCategory.toLowerCase()}`
-            )
-          "
-        >
+        <a v-if="showIsAll" @click="getLink()">
           <div class="category__all">Показать все</div>
         </a>
       </swiper-slide>
@@ -130,6 +113,19 @@ export default {
       } else {
         swipe.navigation.$nextEl[0].style.opacity = "1";
         swipe.navigation.$nextEl[0].style.visibility = "visible";
+      }
+    },
+    getLink() {
+      if (this.typeCategory != "Top Rated") {
+        this.$router.push(
+          `${
+            this.mediaTypeList[0].media_type
+          }/category/${this.typeCategory.toLowerCase()}`
+        );
+      } else {
+        this.$router.push(
+          `${this.mediaTypeList[0].media_type}/category/top_rated`
+        );
       }
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="category">
-    <h2>{{ type }} {{ media }}</h2>
+    <h2>{{ getTitle() }}</h2>
     <div class="category__inner">
       <CategoryItem
         v-for="categoryItem in categoryList"
@@ -24,7 +24,7 @@ export default {
       media: this.$route.params.media,
       type: this.$route.params.type,
       categoryList: [],
-      page: 0,
+      page: 1,
       isLoading: false,
       isLoadingMore: false,
     };
@@ -32,35 +32,42 @@ export default {
   directives: {
     intersection,
   },
-  async mounted() {
-    const config = {};
-    config.time = "week";
-    config.page = this.page;
-    this.getCategoryList(config);
-  },
+
   computed: {
     ...mapState({
       trendingMovieList: (state) => state.movies.trendingMovieList,
       trendingTVList: (state) => state.movies.trendingTVList,
+      topRatedList: (state) => state.movies.topRatedList,
+      popularListSerials: (state) => state.movies.popularListSerials,
+      popularListFilms: (state) => state.movies.popularListFilms,
     }),
   },
   methods: {
     async getCategoryList(config) {
       if (this.type === "trending") {
+        config.type = this.media;
+        await this.getTrendingList(config);
         if (this.media === "tv") {
-          config.type = "tv";
-          await this.getTrendingList(config);
           this.categoryList = this.trendingTVList;
         } else {
-          config.type = "movie";
-          await this.getTrendingList(config);
           this.categoryList = this.trendingMovieList;
+        }
+      } else if (this.type === "top_rated") {
+        config.media = this.media;
+
+        await this.getTopRatedList(config);
+        this.categoryList = this.topRatedList;
+      } else if (this.type === "popular") {
+        await this.getPopularList(config);
+        if (this.media === "tv") {
+          this.categoryList = this.popularListSerials;
+        } else {
+          this.categoryList = this.popularListFilms;
         }
       }
     },
     loadMore() {
       try {
-        console.log(this.isLoadingMore);
         this.page++;
         const config = {
           page: this.page,
@@ -73,7 +80,16 @@ export default {
     },
     ...mapActions({
       getTrendingList: "movies/getTrendingList",
+      getTopRatedList: "movies/getTopRatedList",
+      getPopularList: "movies/getPopularList",
     }),
+    getTitle() {
+      if (this.type !== "top_rated") {
+        return `${this.type} ${this.media}`;
+      } else if (this.type == "top_rated") {
+        return `Top Rated ${this.media}`;
+      }
+    },
   },
 
   components: { CategoryItem },

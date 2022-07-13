@@ -32,8 +32,6 @@ export default {
 <style lang="scss" scoped>
 .star {
   font-size: 17px;
-  padding-top: 15px;
-  margin-bottom: 15px;
   display: flex;
   align-items: flex-end;
   color: #999;

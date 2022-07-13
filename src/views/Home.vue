@@ -2,11 +2,7 @@
   <div v-if="isLoading" class="home">
     <div class="home__header">
       <BackDropBlockVue
-        :infoItem="
-          this.popularListFilms?.results?.concat(
-            this.popularListSerials?.results
-          )
-        "
+        :infoItem="popularListFilms?.concat(popularListSerials)"
       ></BackDropBlockVue>
     </div>
     <div class="home__body">
@@ -25,27 +21,25 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapState } from "vuex";
 import BackDropBlockVue from "@/components/BackDropBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 export default {
   name: "Home",
   components: { BackDropBlockVue, CategoryList },
   data() {
-    return {
-      isLoading: false,
-    };
+    return {};
   },
-  methods: {
+  /*   methods: {
     ...mapActions({
       getGenresList: "movies/getGenresMovies",
       getPopularList: "movies/getPopularList",
       getGeolocation: "geo/getGeolocation",
       getTrendingList: "movies/getTrendingList",
     }),
-  },
+  }, */
 
-  async created() {
+  /*   async created() {
     try {
       await this.getGeolocation();
       this.getGenresList();
@@ -66,7 +60,7 @@ export default {
     } finally {
       this.isLoading = true;
     }
-  },
+  }, */
   computed: {
     ...mapState({
       region: (state) => state.geo.region,
@@ -74,6 +68,7 @@ export default {
       popularListSerials: (state) => state.movies.popularListSerials,
       trendingMovieList: (state) => state.movies.trendingMovieList,
       trendingTVList: (state) => state.movies.trendingTVList,
+      isLoading: (state) => state.movies.isLoading,
     }),
   },
 };

@@ -5,12 +5,46 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   computed: {
     ...mapState({
       showTrailer: (state) => state.movies.showTrailer,
     }),
+  },
+  methods: {
+    ...mapActions({
+      getGenresList: "movies/getGenresMovies",
+      getPopularList: "movies/getPopularList",
+      getGeolocation: "geo/getGeolocation",
+      getTrendingList: "movies/getTrendingList",
+    }),
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+    }),
+  },
+
+  async created() {
+    try {
+      await this.getGeolocation();
+      this.getGenresList();
+      const config = {
+        region: this.region,
+      };
+      await this.getPopularList(config);
+      const configTrending = {
+        time: "week",
+        type: "tv",
+        page: 1,
+      };
+      await this.getTrendingList(configTrending);
+      configTrending.type = "movie";
+      await this.getTrendingList(configTrending);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.setIsLoading(true);
+    }
   },
 };
 </script>

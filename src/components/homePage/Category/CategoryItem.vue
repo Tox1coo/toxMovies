@@ -151,6 +151,7 @@ export default {
     display: flex;
     flex-direction: column;
     width: 100%;
+    gap: 15px;
     align-items: flex-start;
   }
 }
