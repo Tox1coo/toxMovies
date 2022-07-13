@@ -11,7 +11,7 @@
         >
       </h2>
       <a
-        v-if="showIsAll"
+        v-if="showIsAll && mediaTypeList.length > 0"
         @click="
           $router.push(
             `${
@@ -24,6 +24,7 @@
     </div>
 
     <swiper
+      v-if="mediaTypeList.length > 0"
       :slidesPerView="7.3"
       :spaceBetween="20"
       :slidesPerGroup="7"
@@ -53,6 +54,12 @@
         </a>
       </swiper-slide>
     </swiper>
+    <img
+      class="empty"
+      v-else
+      :src="require('@/assets/empty-folder.png')"
+      alt=""
+    />
   </div>
 </template>
 
@@ -136,11 +143,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .category {
   padding-left: 50px;
+  position: relative;
   margin-right: 50px;
-
   &__all {
     min-width: 215px;
     max-height: 324px;

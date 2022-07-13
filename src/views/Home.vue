@@ -21,6 +21,7 @@
       ></CategoryList>
     </div>
   </div>
+  <Loading class="loading__home" v-else></Loading>
 </template>
 
 <script>
@@ -83,13 +84,15 @@ export default {
 .home {
   min-height: 100%;
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   position: relative;
   &__body {
-    margin-top: 100px;
+    margin-top: 70px;
     display: flex;
     flex-direction: column;
-    gap: 100px;
+    gap: 50px;
   }
 }
 </style>

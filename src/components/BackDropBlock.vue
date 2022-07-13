@@ -1,4 +1,4 @@
-<template>
+<template >
   <div class="backdrop">
     <div v-if="isLoading" class="backdrop__inner">
       <div class="backdrop__left">

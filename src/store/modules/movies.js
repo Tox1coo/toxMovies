@@ -23,7 +23,10 @@ export const movies = {
 			trailerKey: '',
 			creditsItem: {},
 			similarList: [],
-			selectedSort: 'All'
+			imagesList: [],
+			selectedSort: 'All',
+			seasonInfo: [],
+			selectedSeason: 1
 		}
 	},
 
@@ -74,6 +77,11 @@ export const movies = {
 			state.creditsItem = creditsItem;
 		},
 
+		setImagesList(state, imagesList) {
+			delete imagesList.id
+			state.imagesList = imagesList;
+		},
+
 		setSimilarList(state, similarList) {
 			if (state?.serial != null) {
 				state.similarList = similarList.filter(similar => similar.id !== state.serial?.id);
@@ -82,6 +90,14 @@ export const movies = {
 				state.similarList = similarList.filter(similar => similar.id !== state.film?.id);
 
 			}
+		},
+
+		setSeasonInfo(state, seasonInfo) {
+			state.seasonInfo.push(seasonInfo)
+		},
+
+		updateSelectedSeason(state, selectedSeason) {
+			state.selectedSeason = selectedSeason
 		}
 	},
 	getters: {
@@ -91,6 +107,15 @@ export const movies = {
 					return state.videoLists
 				} else {
 					return video.type === state.selectedSort
+				}
+			})
+		},
+		sortedSeason(state) {
+			return [...state.seasonInfo].filter(season => {
+				if (state.selectedSeason === 'All') {
+					return state.seasonInfo
+				} else {
+					return season.season_number === state.selectedSeason
 				}
 			})
 		}
@@ -210,7 +235,6 @@ export const movies = {
 
 		// getTrailerVideoList
 		async getTrailerVideoList({ commit, state }, config) {
-			console.log(config);
 			await axios.get(`${state.BASE_URL}/${config.media_type}/${config.id}/videos?api_key=${state.API_KEY}`).then((response) => {
 				commit('setTrailer', response.data.results)
 			}).catch((error) => {
@@ -238,8 +262,39 @@ export const movies = {
 			}).catch((error) => {
 				console.log(error);
 			})
+		},
+
+		// getImages
+		async getImages({ commit, state }, config) {
+			await axios.get(`${state.BASE_URL}/${config.media_type}/${config.id}/images?api_key=${state.API_KEY}`, {
+				params: {
+					language: 'en'
+				}
+			}
+			).then((response) => {
+				console.log(response.data);
+				commit('setImagesList', response.data)
+			}).catch((error) => {
+				console.log(error);
+			});
+		},
+
+		async getSeasonsInfo({ commit, state }) {
+			console.log(state.serial.id);
+			const serialSeasons = state.serial.number_of_seasons
+			for (let index = 0; index < serialSeasons; index++) {
+				await axios.get(`${state.BASE_URL}/tv/${state.serial.id}/season/${index + 1}?api_key=${state.API_KEY}`,
+					{
+						params: {
+							language: 'ru'
+						}
+					}).then((response) => {
+						commit('setSeasonInfo', response.data)
+					}).catch(error => {
+						console.log(error);
+					})
+			}
 		}
 	},
-
 	namespaced: true
 }

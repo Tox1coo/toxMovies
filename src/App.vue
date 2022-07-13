@@ -20,7 +20,10 @@ export default {
   color: $main-color;
   background-color: $main-bgcolor;
   min-height: 100%;
+  overflow: hidden;
   padding-bottom: 50px;
+  display: flex;
+  flex-direction: column;
 }
 
 *,

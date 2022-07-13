@@ -229,11 +229,20 @@ export default {
     display: flex;
     padding: 50px;
     padding-top: 30px;
+    &-poster {
+      animation: anim-poster 2s cubic-bezier(0.14, 0.47, 0.2, 1.15);
+    }
   }
   margin-bottom: 25px;
 }
 .info {
   margin-left: 50px;
+  &__title {
+    animation: anim-title 1s ease;
+  }
+  &__list {
+    animation: anim-list 2s cubic-bezier(0.14, 0.47, 0.2, 1.15);
+  }
 }
 .list-link {
   margin-right: 5px;
@@ -260,6 +269,39 @@ ul {
       max-width: fit-content;
       min-width: 180px;
     }
+  }
+}
+
+@keyframes anim-title {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes anim-list {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes anim-poster {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
   }
 }
 </style>

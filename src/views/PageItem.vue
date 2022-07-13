@@ -9,18 +9,14 @@
         :prevId="prevTab"
       ></Tabs>
       <div class="page__info">
-        <transition-group name="info">
-          <OverviewBlock
-            v-if="currentTab.title === 'Overview'"
-            :overviewItem="pageItem"
-            :director="directoryFilm"
-            :castList="castList"
-          ></OverviewBlock>
-        </transition-group>
-
-        <transition name="info">
-          <VideoBlock v-if="currentTab.title === 'Videos'"></VideoBlock>
-        </transition>
+        <OverviewBlock
+          v-if="currentTab.title === 'Overview'"
+          :overviewItem="pageItem"
+          :director="directoryFilm"
+          :castList="castList"
+        ></OverviewBlock>
+        <VideoBlock v-if="currentTab.title === 'Videos'"></VideoBlock>
+        <ImagesBlock v-if="currentTab.title === 'Photos'"></ImagesBlock>
       </div>
       <CategoryList
         :mediaTypeList="similarList"
@@ -29,6 +25,7 @@
       ></CategoryList>
     </div>
   </div>
+  <Loading class="loading__home" v-else></Loading>
 </template>
 <!-- TODO: проверить правильность выбора трейлера после перехода по ссылке на фильмах и сериалах 'Посмотреть еще' -->
 <script>
@@ -37,6 +34,7 @@ import { mapActions, mapState } from "vuex";
 import OverviewBlock from "@/components/homePage/PageType/OverviewBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 import VideoBlock from "@/components/homePage/PageType/VideoBlock.vue";
+import ImagesBlock from "@/components/homePage/PageType/ImagesBlock.vue";
 export default {
   name: "PageItem",
   data() {
@@ -58,13 +56,21 @@ export default {
       directoryFilm: {},
     };
   },
-  components: { BackDropBlock, OverviewBlock, CategoryList, VideoBlock },
+  components: {
+    BackDropBlock,
+    OverviewBlock,
+    CategoryList,
+    VideoBlock,
+    ImagesBlock,
+  },
   methods: {
     ...mapActions({
       getFilm: "movies/getFilm",
       getSerials: "movies/getSerials",
       getCreditsInfo: "movies/getCreditsInfo",
       getSimilar: "movies/getSimilar",
+      getImages: "movies/getImages",
+      getSeasonsInfo: "movies/getSeasonsInfo",
     }),
     setCurrentTab(currentTab) {
       this.prevTab = this.currentTab;
@@ -90,7 +96,8 @@ export default {
           };
           await this.getCreditsInfo(config);
           await this.getOverviewInfo();
-
+          await this.getImages(config);
+          await this.getSeasonsInfo();
           this.isLoading = true;
         } else {
           await this.getFilm(this.id);
@@ -110,6 +117,8 @@ export default {
             };
             await this.getCreditsInfo(config);
             await this.getOverviewInfo();
+            await this.getImages(config);
+
             this.isLoading = true;
           }, 500);
         }

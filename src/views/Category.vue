@@ -9,6 +9,7 @@
       ></CategoryItem>
     </div>
     <div v-intersection="loadMore" class="observer"></div>
+    <Loading></Loading>
   </div>
 </template>
 
@@ -35,7 +36,7 @@ export default {
     const config = {};
     config.time = "week";
     config.page = this.page;
-    this.getCategoryList();
+    this.getCategoryList(config);
   },
   computed: {
     ...mapState({
@@ -59,6 +60,7 @@ export default {
     },
     loadMore() {
       try {
+        console.log(this.isLoadingMore);
         this.page++;
         const config = {
           page: this.page,
@@ -67,8 +69,6 @@ export default {
         this.getCategoryList(config);
       } catch (error) {
         console.log(error);
-      } finally {
-        this.isLoadingMore = true;
       }
     },
     ...mapActions({
