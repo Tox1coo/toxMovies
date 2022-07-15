@@ -3,7 +3,7 @@
   <Footer></Footer>
   <ModalTrailer :show="showTrailer"></ModalTrailer>
 </template>
-
+<!-- TODO: Сделать слайдер с коллекциями. Или отдельную вкладку с коллекцией -->
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 export default {

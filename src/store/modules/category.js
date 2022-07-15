@@ -18,12 +18,16 @@ export const category = {
 				movie: []
 			},
 			upComingList: {
-				tv: [],
 				movie: []
 			},
 			nowPlayingList: {
-				tv: [],
 				movie: []
+			},
+			onTheAirList: {
+				tv: []
+			},
+			airingTodayList: {
+				tv: []
 			},
 			totalPage: 0
 		}
@@ -34,32 +38,49 @@ export const category = {
 			topRated.list.forEach(element => {
 				element.media_type = topRated.media
 			});
-			state.topRatedList[topRated.media] = state.topRatedList[topRated.media].concat(topRated.list)
+			state.topRatedList[topRated.media] = [...state.topRatedList[topRated.media], ...topRated.list]
 		},
 
 		updatePopularList(state, popularList) {
 			popularList.list.forEach(element => {
 				element.media_type = popularList.media
 			});
-			state.popularList[popularList.media] = state.popularList[popularList.media].concat(popularList.list)
+			state.popularList[popularList.media] = [...state.popularList[popularList.media], ...popularList.list]
 		},
 		updateTrendingList(state, trendingList) {
-			state.trendingList[trendingList.media] = state.trendingList[trendingList.media].concat(trendingList.list)
+			state.trendingList[trendingList.media] = [...state.trendingList[trendingList.media], ...trendingList.list]
 		},
 		updateUpComingList(state, upComingList) {
+
 			upComingList.list.forEach(element => {
 				element.media_type = upComingList.media
 			});
-			state.upComingList[upComingList.media] = state.upComingList[upComingList.media].concat(upComingList.list)
+			state.upComingList[upComingList.media] = [...state.upComingList[upComingList.media], ...upComingList.list]
 		},
 		updateNowPlayingList(state, nowPlayingList) {
 			nowPlayingList.list.forEach(element => {
 				element.media_type = nowPlayingList.media
 			});
-			state.nowPlayingList[nowPlayingList.media] = state.nowPlayingList[nowPlayingList.media].concat(nowPlayingList.list)
+			state.nowPlayingList[nowPlayingList.media] = [...state.nowPlayingList[nowPlayingList.media], ...nowPlayingList.list]
+		},
+		updateOnTheAirList(state, onTheAirList) {
+			onTheAirList.list.forEach(element => {
+				element.media_type = onTheAirList.media
+			});
+			state.onTheAirList[onTheAirList.media] = [...state.onTheAirList[onTheAirList.media], ...onTheAirList.list]
+		},
+		updateAiringTodayList(state, airingTodayList) {
+			airingTodayList.list.forEach(element => {
+				element.media_type = airingTodayList.media
+			});
+			state.airingTodayList[airingTodayList.media] = [...state.airingTodayList[airingTodayList.media], ...airingTodayList.list]
 		},
 		updateTotalPage(state, totalPage) {
 			state.totalPage = totalPage
+		},
+		clearList(state, list) {
+			console.log(state[list.list]);
+			state[list.list][list.media] = []
 		}
 	},
 
@@ -124,12 +145,13 @@ export const category = {
 				params: {
 					language: 'ru',
 					page: config.page,
-					region: config.region
+					region: 'ru'
 				}
 			})
 				.then(response => {
 					commit('updateNowPlayingList', { list: response.data.results, media: config.media })
 					commit('updateTotalPage', response.data.total_pages)
+					console.log(response.data.results);
 
 
 				})
@@ -145,7 +167,7 @@ export const category = {
 				}
 			})
 				.then(response => {
-
+					console.log(response.data.results);
 					commit('updateUpComingList', { list: response.data.results, media: config.media })
 					commit('updateTotalPage', response.data.total_pages)
 				})
@@ -153,6 +175,39 @@ export const category = {
 					console.log(error);
 				})
 		},
+
+		async getOnTheAirList({ commit, state }, config) {
+			await axios.get(`${state.BASE_URL}/tv/on_the_air?api_key=${state.API_KEY}`, {
+				params: {
+					language: 'ru',
+					page: config.page,
+				}
+			})
+				.then(response => {
+					console.log(response.data.results);
+					commit('updateOnTheAirList', { list: response.data.results, media: config.media })
+					commit('updateTotalPage', response.data.total_pages)
+				})
+				.catch(error => {
+					console.log(error);
+				})
+		},
+		async getAiringTodayList({ commit, state }, config) {
+			await axios.get(`${state.BASE_URL}/tv/airing_today?api_key=${state.API_KEY}`, {
+				params: {
+					language: 'ru',
+					page: config.page,
+				}
+			})
+				.then(response => {
+					console.log(response.data.results);
+					commit('updateAiringTodayList', { list: response.data.results, media: config.media })
+					commit('updateTotalPage', response.data.total_pages)
+				})
+				.catch(error => {
+					console.log(error);
+				})
+		}
 	},
 	namespaced: true,
 }

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import BackDropBlockVue from "@/components/BackDropBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 export default {
@@ -39,23 +39,33 @@ export default {
       getGeolocation: "geo/getGeolocation",
       getTrendingList: "category/getTrendingList",
     }),
+    ...mapMutations({
+      clearList: "category/clearList",
+    }),
   },
 
-  async mounted() {
+  async created() {
     try {
       const config = {
         region: this.region,
         media: "movie",
       };
-      await this.getPopularList(config);
-      config.media = "tv";
+      console.log(new Date());
+
       await this.getPopularList(config);
 
+      console.log(new Date());
+      config.media = "tv";
+
+      await this.getPopularList(config);
       const configTrending = {
         time: "week",
         media: "tv",
         page: 1,
       };
+
+      this.clearList({ list: "trendingList", media: "movie" });
+      this.clearList({ list: "trendingList", media: "tv" });
       await this.getTrendingList(configTrending);
       configTrending.media = "movie";
       await this.getTrendingList(configTrending);
@@ -69,7 +79,6 @@ export default {
     ...mapState({
       region: (state) => state.geo.region,
       popularList: (state) => state.category.popularList,
-      trendingMovieList: (state) => state.movies.trendingMovieList,
       trendingList: (state) => state.category.trendingList,
     }),
   },

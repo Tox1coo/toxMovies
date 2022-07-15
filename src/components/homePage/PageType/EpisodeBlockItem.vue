@@ -60,6 +60,9 @@ export default {
     flex-direction: column;
     gap: 5px;
     width: 400px;
+    & img {
+      min-height: 300px;
+    }
   }
   &-overview {
     display: flex;

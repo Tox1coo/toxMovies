@@ -26,7 +26,7 @@
 <script>
 /* eslint-disable-next-line no-unused-vars */
 import BackDropBlock from "@/components/BackDropBlock.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 
 export default {
@@ -47,9 +47,16 @@ export default {
       getNowPlayingList: "category/getNowPlayingList",
       getPopularList: "category/getPopularList",
     }),
+    ...mapMutations({
+      clearList: "category/clearList",
+    }),
   },
 
   async mounted() {
+    this.clearList({ list: "popularList", media: "movie" });
+    this.clearList({ list: "topRatedList", media: "movie" });
+    this.clearList({ list: "upComingList", media: "movie" });
+    this.clearList({ list: "nowPlayingList", media: "movie" });
     try {
       const config = {
         media: "movie",

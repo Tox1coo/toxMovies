@@ -18,7 +18,7 @@
             <ul>
               <li v-if="this.$route.params.media === 'movie'">
                 <div>Released:</div>
-                <div>
+                <div v-if="this.overviewItem?.release_date != ''">
                   {{ new Date(this.overviewItem.release_date).getDate() }}
                   {{
                     arrMonth[
@@ -27,6 +27,7 @@
                   }}
                   {{ new Date(this.overviewItem.release_date).getFullYear() }}
                 </div>
+                <div v-else>Неизвестно</div>
               </li>
               <li v-if="this.$route.params.media === 'tv'">
                 <div>First Aired:</div>
@@ -75,7 +76,12 @@
               </li>
               <li>
                 <div>Budget:</div>
-                <div v-if="overviewItem?.budget != undefined">
+                <div
+                  v-if="
+                    overviewItem?.budget != undefined &&
+                    overviewItem.budget != 0
+                  "
+                >
                   {{
                     overviewItem?.budget
                       ?.toString()
@@ -87,7 +93,12 @@
               </li>
               <li>
                 <div>Revenue:</div>
-                <div v-if="overviewItem?.revenue != undefined">
+                <div
+                  v-if="
+                    overviewItem?.revenue != undefined &&
+                    overviewItem.revenue != 0
+                  "
+                >
                   {{
                     overviewItem?.revenue
                       ?.toString()
@@ -268,6 +279,9 @@ ul {
     div:first-child {
       max-width: fit-content;
       min-width: 180px;
+    }
+    div:last-child {
+      width: 500px;
     }
   }
 }

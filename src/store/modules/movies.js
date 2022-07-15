@@ -9,15 +9,10 @@ export const movies = {
 			API_KEY: 'd7083550b43318a344ca78678b536326',
 			BASE_URL: 'https://api.themoviedb.org/3',
 			IMAGE_URL: 'https://image.tmdb.org/t/p',
-			SEARCH_URL: 'https://api.themoviedb.org/3/search/movie?api_key=',
-			popularListFilms: [],
 			genresList: [],
-			popularListSerials: [],
 			serial: null,
 			film: null,
 			rating: '',
-			trendingMovieList: [],
-			trendingTVList: [],
 			showTrailer: false,
 			videoLists: [],
 			trailerKey: '',
@@ -27,7 +22,6 @@ export const movies = {
 			selectedSort: 'All',
 			seasonInfo: [],
 			isLoading: false,
-			topRatedList: []
 		}
 	},
 
@@ -38,25 +32,7 @@ export const movies = {
 		updateGenresList(state, genresList) {
 			state.genresList = genresList
 		},
-		updateTopRatedList(state, topRated) {
-			console.log(topRated.media);
-			topRated.list.forEach(element => {
-				element.media_type = topRated.media
-			});
-			state.topRatedList = state.topRatedList.concat(topRated.list)
-		},
-		updatePopularListFilms(state, popularListFilms) {
-			popularListFilms.results.forEach(element => {
-				element.media_type = 'movie'
-			});
-			state.popularListFilms = state.popularListFilms.concat(popularListFilms.results)
-		},
-		updatePopularListSerials(state, popularListSerials) {
-			popularListSerials.results.forEach(element => {
-				element.media_type = 'tv'
-			});
-			state.popularListSerials = state.popularListSerials.concat(popularListSerials.results)
-		},
+
 		updateSerial(state, serial) {
 			state.serial = serial
 		},
@@ -66,12 +42,7 @@ export const movies = {
 		updateRating(state, rating) {
 			state.rating = rating;
 		},
-		updateTrendingMovieList(state, trendingMovieList) {
-			state.trendingMovieList = state.trendingMovieList.concat(trendingMovieList)
-		},
-		updateTrendingTVList(state, trendingTVList) {
-			state.trendingTVList = state.trendingTVList.concat(trendingTVList)
-		},
+
 		isShowTrailer(state, showTrailer) {
 			state.showTrailer = showTrailer
 		},
@@ -133,52 +104,7 @@ export const movies = {
 
 	},
 	actions: {
-		// popularList
-		async getPopularList({ commit, state }, config) {
-			axios.get(`${state.BASE_URL}/${config.media}/popular?api_key=${state.API_KEY}`, {
-				params: {
-					language: 'ru',
-					region: config.region,
-					page: config.page || 1
-				}
-			})
-				.then(response => {
 
-					commit('updatePopularListFilms', { list: response.data.results, media: config.media })
-				})
-				.catch(error => {
-					console.log(error);
-				})
-			/* 			axios.get(`${state.BASE_URL}/tv/popular?api_key=${state.API_KEY}`, {
-							params: {
-								language: 'ru',
-								region: config.region,
-								page: config.page || 1
-							}
-						})
-							.then(response => {
-								commit('updatePopularListSerials', { list: response.data.results, media: 'tv' })
-							})
-							.catch(error => {
-								console.log(error);
-							}) */
-		},
-
-		async getTopRatedList({ commit, state }, config) {
-			axios.get(`${state.BASE_URL}/${config.media}/top_rated?api_key=${state.API_KEY}`, {
-				params: {
-					language: 'ru',
-					region: config.region,
-					page: config.page || 1
-				}
-			})
-				.then(response => {
-					commit('updateTopRatedList', { list: response.data.results, media: config.media })
-				})
-				.catch(error => {
-					console.log(error);
-				})
-		},
 
 		// genresList
 		async getGenresMovies({ commit, state }) {
@@ -238,28 +164,7 @@ export const movies = {
 				})
 		},
 
-		// getTrendingList
-		async getTrendingList({ commit, state }, config) {
-			await axios.get(`${state.BASE_URL}/trending/${config.type}/${config.time}?api_key=${state.API_KEY}`, {
-				params: {
-					language: 'ru',
-					page: config.page
-				}
-			})
-				.then(response => {
-					console.log(config.type);
-					if (config.type === 'movie') {
-						commit('updateTrendingMovieList', response.data.results)
 
-					} else if (config.type === 'tv') {
-						commit('updateTrendingTVList', response.data.results)
-
-					}
-				})
-				.catch(error => {
-					console.log(error);
-				})
-		},
 
 		// getTrailerVideoList
 		async getTrailerVideoList({ commit, state }, config) {

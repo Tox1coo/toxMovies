@@ -26,6 +26,11 @@ export default {
       this.$refs.rating__active.style.width = `${this.vote_average / 0.1}%`;
     },
   },
+  watch: {
+    vote_count() {
+      this.initialRating();
+    },
+  },
 };
 </script>
 

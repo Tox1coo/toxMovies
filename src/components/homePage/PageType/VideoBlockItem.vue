@@ -46,6 +46,8 @@ export default {
     position: relative;
     z-index: 1;
     transition: transform 0.4s ease 0s;
+    min-width: 320px;
+    max-height: 180px;
   }
   &::after {
     content: "";

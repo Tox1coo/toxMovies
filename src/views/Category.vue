@@ -1,6 +1,6 @@
 <template>
   <div class="category">
-    <h2>{{ getTitle() }}</h2>
+    <h2>{{ getTitle }}</h2>
     <div class="category__inner">
       <CategoryItem
         v-for="categoryItem in categoryList"
@@ -14,7 +14,7 @@
 </template>
 <!-- TODO: сделать проверку на максимульное количество страниц -->
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import intersection from "@/components/directives/VIntersection";
 import CategoryItem from "../components/homePage/Category/CategoryItem.vue";
 export default {
@@ -40,23 +40,34 @@ export default {
       popularList: (state) => state.category.popularList,
       nowPlayingList: (state) => state.category.nowPlayingList,
       upComingList: (state) => state.category.upComingList,
+      onTheAirList: (state) => state.category.onTheAirList,
+      airingTodayList: (state) => state.category.airingTodayList,
       region: (state) => state.geo.region,
       totalPage: (state) => state.category.totalPage,
     }),
+    getTitle() {
+      return `${this.type} ${this.media}`;
+    },
   },
   /* Продумать как лучше сделать загрузку данных */
   mounted() {
-    const config = {
-      page: this.page,
-      time: "week",
-    };
-    this.getCategoryList(config);
+    this.clear();
+    setTimeout(() => {
+      const config = {
+        page: this.page,
+        time: "week",
+      };
+      this.getCategoryList(config);
+    }, 200);
     setTimeout(() => {
       this.isLoading = true;
     }, 500);
     /* TODO: сделать проверку есть ли запись в массиве или нет, чтобы не загружались одни и те же позиции!! */
   },
   methods: {
+    ...mapMutations({
+      clearList: "category/clearList",
+    }),
     async getCategoryList(config) {
       config.media = this.media;
       config.region = this.region;
@@ -80,6 +91,16 @@ export default {
         case "upcoming":
           await this.getUpComingList(config);
           this.categoryList = this.upComingList[this.media];
+          break;
+        case "on_the_air":
+          await this.getOnTheAirList(config);
+          this.categoryList = this.onTheAirList[this.media];
+
+          break;
+        case "airing_today":
+          await this.getAiringTodayList(config);
+          this.categoryList = this.airingTodayList[this.media];
+
           break;
         default:
           break;
@@ -107,13 +128,36 @@ export default {
       getTopRatedList: "category/getTopRatedList",
       getPopularList: "category/getPopularList",
       getUpComingList: "category/getUpComingList",
+      getAiringTodayList: "category/getAiringTodayList",
+      getOnTheAirList: "category/getOnTheAirList",
       getNowPlayingList: "category/getNowPlayingList",
     }),
-    getTitle() {
-      if (this.type !== "top_rated") {
-        return `${this.type} ${this.media}`;
-      } else if (this.type == "top_rated") {
-        return `Top Rated ${this.media}`;
+
+    clear() {
+      switch (this.type) {
+        case "trending":
+          this.clearList({ list: "trendingList", media: this.media });
+          break;
+        case "top_rated":
+          this.clearList({ list: "topRatedList", media: "movie" });
+          break;
+        case "popular":
+          this.clearList({ list: "popularList", media: this.media });
+          break;
+        case "now_playing":
+          this.clearList({ list: "nowPlayingList", media: "movie" });
+          break;
+        case "upcoming":
+          this.clearList({ list: "upComingList", media: "movie" });
+          break;
+        case "on_the_air":
+          this.clearList({ list: "onTheAirList", media: "tv" });
+          break;
+        case "airing_today":
+          this.clearList({ list: "airingTodayList", media: "tv" });
+          break;
+        default:
+          break;
       }
     },
   },

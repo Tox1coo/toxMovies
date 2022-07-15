@@ -23,11 +23,18 @@
               <span v-if="this.serial != null">
                 Cезонов {{ serial?.last_episode_to_air?.season_number }}
               </span>
-              - c
-              {{
-                new Date(currentItem?.first_air_date).getFullYear() ||
-                new Date(currentItem?.release_date).getFullYear()
-              }}
+              <span
+                v-if="
+                  currentItem?.first_air_date != '' &&
+                  currentItem?.release_date != ''
+                "
+              >
+                - c
+                {{
+                  new Date(currentItem?.first_air_date).getFullYear() ||
+                  new Date(currentItem?.release_date).getFullYear()
+                }}</span
+              >
               <span v-if="rating">, Cert. {{ rating }}</span>
             </div>
           </div>
@@ -185,6 +192,19 @@ export default {
     &-img {
       height: 599px;
       width: 100%;
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        display: flex;
+        top: 50%;
+        height: 64px;
+        width: 64px;
+        left: 50%;
+        z-index: 1000;
+        transform: translate(-50%, -50%);
+        background-image: url("../assets/error.png");
+      }
     }
     &::after {
       content: "";

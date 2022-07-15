@@ -11,12 +11,12 @@
         :typeCategory="'Top Rated'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="upComingList.tv"
-        :typeCategory="'UpComing'"
+        :mediaTypeList="onTheAirList.tv"
+        :typeCategory="'On the Air'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="nowPlayingList.tv"
-        :typeCategory="'Now Playing'"
+        :mediaTypeList="airingTodayList.tv"
+        :typeCategory="'Airing Today'"
       ></CategoryList>
     </div>
   </div>
@@ -26,7 +26,7 @@
 <script>
 /* eslint-disable-next-line no-unused-vars */
 import BackDropBlock from "@/components/BackDropBlock.vue";
-import { mapState, mapActions } from "vuex";
+import { mapMutations, mapState, mapActions } from "vuex";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 
 export default {
@@ -43,13 +43,20 @@ export default {
   methods: {
     ...mapActions({
       getTopRatedList: "category/getTopRatedList",
-      getUpComingList: "category/getUpComingList",
-      getNowPlayingList: "category/getNowPlayingList",
       getPopularList: "category/getPopularList",
+      getAiringTodayList: "category/getAiringTodayList",
+      getOnTheAirList: "category/getOnTheAirList",
+    }),
+    ...mapMutations({
+      clearList: "category/clearList",
     }),
   },
 
   async mounted() {
+    this.clearList({ list: "popularList", media: "tv" });
+    this.clearList({ list: "topRatedList", media: "tv" });
+    this.clearList({ list: "airingTodayList", media: "tv" });
+    this.clearList({ list: "onTheAirList", media: "tv" });
     try {
       const config = {
         media: "tv",
@@ -58,8 +65,8 @@ export default {
       };
       await this.getPopularList(config);
       await this.getTopRatedList(config);
-      await this.getNowPlayingList(config);
-      await this.getUpComingList(config);
+      await this.getAiringTodayList(config);
+      await this.getOnTheAirList(config);
     } catch (error) {
       console.log(error);
     } finally {
@@ -70,9 +77,9 @@ export default {
     ...mapState({
       popularList: (state) => state.category.popularList,
       topRatedList: (state) => state.category.topRatedList,
-      upComingList: (state) => state.category.upComingList,
-      nowPlayingList: (state) => state.category.nowPlayingList,
-      region: (state) => state.tvs.region,
+      onTheAirList: (state) => state.category.onTheAirList,
+      airingTodayList: (state) => state.category.airingTodayList,
+      region: (state) => state.movies.region,
     }),
   },
 };

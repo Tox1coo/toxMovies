@@ -124,6 +124,14 @@ export default {
         this.$router.push(
           `${this.mediaTypeList[0].media_type}/category/now_playing`
         );
+      } else if (this.typeCategory == "On the Air") {
+        this.$router.push(
+          `${this.mediaTypeList[0].media_type}/category/on_the_air`
+        );
+      } else if (this.typeCategory == "Airing Today") {
+        this.$router.push(
+          `${this.mediaTypeList[0].media_type}/category/airing_today`
+        );
       } else {
         this.$router.push(
           `${
