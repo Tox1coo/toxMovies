@@ -45,7 +45,6 @@ export const movies = {
 			});
 			state.topRatedList = state.topRatedList.concat(topRated.list)
 		},
-
 		updatePopularListFilms(state, popularListFilms) {
 			popularListFilms.results.forEach(element => {
 				element.media_type = 'movie'
@@ -136,7 +135,7 @@ export const movies = {
 	actions: {
 		// popularList
 		async getPopularList({ commit, state }, config) {
-			axios.get(`${state.BASE_URL}/movie/popular?api_key=${state.API_KEY}`, {
+			axios.get(`${state.BASE_URL}/${config.media}/popular?api_key=${state.API_KEY}`, {
 				params: {
 					language: 'ru',
 					region: config.region,
@@ -144,24 +143,25 @@ export const movies = {
 				}
 			})
 				.then(response => {
-					commit('updatePopularListFilms', response.data)
+
+					commit('updatePopularListFilms', { list: response.data.results, media: config.media })
 				})
 				.catch(error => {
 					console.log(error);
 				})
-			axios.get(`${state.BASE_URL}/tv/popular?api_key=${state.API_KEY}`, {
-				params: {
-					language: 'ru',
-					region: config.region,
-					page: config.page || 1
-				}
-			})
-				.then(response => {
-					commit('updatePopularListSerials', response.data)
-				})
-				.catch(error => {
-					console.log(error);
-				})
+			/* 			axios.get(`${state.BASE_URL}/tv/popular?api_key=${state.API_KEY}`, {
+							params: {
+								language: 'ru',
+								region: config.region,
+								page: config.page || 1
+							}
+						})
+							.then(response => {
+								commit('updatePopularListSerials', { list: response.data.results, media: 'tv' })
+							})
+							.catch(error => {
+								console.log(error);
+							}) */
 		},
 
 		async getTopRatedList({ commit, state }, config) {

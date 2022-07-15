@@ -8,11 +8,11 @@
         :categoryItem="categoryItem"
       ></CategoryItem>
     </div>
-    <div v-intersection="loadMore" class="observer"></div>
-    <Loading></Loading>
+    <div v-if="isLoading" v-intersection="loadMore" class="observer"></div>
+    <Loading v-if="page < totalPage"></Loading>
   </div>
 </template>
-
+<!-- TODO: сделать проверку на максимульное количество страниц -->
 <script>
 import { mapActions, mapState } from "vuex";
 import intersection from "@/components/directives/VIntersection";
@@ -35,53 +35,79 @@ export default {
 
   computed: {
     ...mapState({
-      trendingMovieList: (state) => state.movies.trendingMovieList,
-      trendingTVList: (state) => state.movies.trendingTVList,
-      topRatedList: (state) => state.movies.topRatedList,
-      popularListSerials: (state) => state.movies.popularListSerials,
-      popularListFilms: (state) => state.movies.popularListFilms,
+      trendingList: (state) => state.category.trendingList,
+      topRatedList: (state) => state.category.topRatedList,
+      popularList: (state) => state.category.popularList,
+      nowPlayingList: (state) => state.category.nowPlayingList,
+      upComingList: (state) => state.category.upComingList,
+      region: (state) => state.geo.region,
+      totalPage: (state) => state.category.totalPage,
     }),
+  },
+  /* Продумать как лучше сделать загрузку данных */
+  mounted() {
+    const config = {
+      page: this.page,
+      time: "week",
+    };
+    this.getCategoryList(config);
+    setTimeout(() => {
+      this.isLoading = true;
+    }, 500);
+    /* TODO: сделать проверку есть ли запись в массиве или нет, чтобы не загружались одни и те же позиции!! */
   },
   methods: {
     async getCategoryList(config) {
-      if (this.type === "trending") {
-        config.type = this.media;
-        await this.getTrendingList(config);
-        if (this.media === "tv") {
-          this.categoryList = this.trendingTVList;
-        } else {
-          this.categoryList = this.trendingMovieList;
-        }
-      } else if (this.type === "top_rated") {
-        config.media = this.media;
-
-        await this.getTopRatedList(config);
-        this.categoryList = this.topRatedList;
-      } else if (this.type === "popular") {
-        await this.getPopularList(config);
-        if (this.media === "tv") {
-          this.categoryList = this.popularListSerials;
-        } else {
-          this.categoryList = this.popularListFilms;
-        }
+      config.media = this.media;
+      config.region = this.region;
+      switch (this.type) {
+        case "trending":
+          await this.getTrendingList(config);
+          this.categoryList = this.trendingList[this.media];
+          break;
+        case "top_rated":
+          await this.getTopRatedList(config);
+          this.categoryList = this.topRatedList[this.media];
+          break;
+        case "popular":
+          await this.getPopularList(config);
+          this.categoryList = this.popularList[this.media];
+          break;
+        case "now_playing":
+          await this.getNowPlayingList(config);
+          this.categoryList = this.nowPlayingList[this.media];
+          break;
+        case "upcoming":
+          await this.getUpComingList(config);
+          this.categoryList = this.upComingList[this.media];
+          break;
+        default:
+          break;
       }
+      // переписать в виде функции
     },
     loadMore() {
       try {
-        this.page++;
-        const config = {
-          page: this.page,
-          time: "week",
-        };
-        this.getCategoryList(config);
+        if (this.page < this.totalPage) {
+          this.page++;
+          const config = {
+            page: this.page,
+            time: "week",
+          };
+          this.getCategoryList(config);
+        } else {
+          this.isLoading = false;
+        }
       } catch (error) {
         console.log(error);
       }
     },
     ...mapActions({
-      getTrendingList: "movies/getTrendingList",
-      getTopRatedList: "movies/getTopRatedList",
-      getPopularList: "movies/getPopularList",
+      getTrendingList: "category/getTrendingList",
+      getTopRatedList: "category/getTopRatedList",
+      getPopularList: "category/getPopularList",
+      getUpComingList: "category/getUpComingList",
+      getNowPlayingList: "category/getNowPlayingList",
     }),
     getTitle() {
       if (this.type !== "top_rated") {

@@ -51,9 +51,12 @@ export default {
 <style lang="scss" scoped>
 .season {
   &__inner {
+    padding: 30px 30px 50px 50px;
+
     &-season {
       display: flex;
-      gap: 30px;
+      flex-wrap: wrap;
+      gap: 27px;
     }
   }
 }

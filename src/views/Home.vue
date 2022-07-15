@@ -2,18 +2,18 @@
   <div v-if="isLoading" class="home">
     <div class="home__header">
       <BackDropBlockVue
-        :infoItem="popularListFilms?.concat(popularListSerials)"
+        :infoItem="popularList.movie.concat(popularList.tv)"
       ></BackDropBlockVue>
     </div>
     <div class="home__body">
       <CategoryList
         :typeCategory="'Trending'"
-        :mediaTypeList="trendingTVList"
+        :mediaTypeList="trendingList['movie']"
       ></CategoryList>
 
       <CategoryList
         :typeCategory="'Trending'"
-        :mediaTypeList="trendingMovieList"
+        :mediaTypeList="trendingList['tv']"
       ></CategoryList>
     </div>
   </div>
@@ -21,54 +21,56 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import BackDropBlockVue from "@/components/BackDropBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 export default {
   name: "Home",
   components: { BackDropBlockVue, CategoryList },
   data() {
-    return {};
+    return {
+      isLoading: false,
+    };
   },
-  /*   methods: {
+  methods: {
     ...mapActions({
       getGenresList: "movies/getGenresMovies",
-      getPopularList: "movies/getPopularList",
+      getPopularList: "category/getPopularList",
       getGeolocation: "geo/getGeolocation",
-      getTrendingList: "movies/getTrendingList",
+      getTrendingList: "category/getTrendingList",
     }),
-  }, */
+  },
 
-  /*   async created() {
+  async mounted() {
     try {
-      await this.getGeolocation();
-      this.getGenresList();
       const config = {
         region: this.region,
+        media: "movie",
       };
       await this.getPopularList(config);
+      config.media = "tv";
+      await this.getPopularList(config);
+
       const configTrending = {
         time: "week",
-        type: "tv",
+        media: "tv",
         page: 1,
       };
       await this.getTrendingList(configTrending);
-      configTrending.type = "movie";
+      configTrending.media = "movie";
       await this.getTrendingList(configTrending);
     } catch (error) {
       console.log(error);
     } finally {
       this.isLoading = true;
     }
-  }, */
+  },
   computed: {
     ...mapState({
       region: (state) => state.geo.region,
-      popularListFilms: (state) => state.movies.popularListFilms,
-      popularListSerials: (state) => state.movies.popularListSerials,
+      popularList: (state) => state.category.popularList,
       trendingMovieList: (state) => state.movies.trendingMovieList,
-      trendingTVList: (state) => state.movies.trendingTVList,
-      isLoading: (state) => state.movies.isLoading,
+      trendingList: (state) => state.category.trendingList,
     }),
   },
 };

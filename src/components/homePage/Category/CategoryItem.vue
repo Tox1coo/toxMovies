@@ -64,8 +64,6 @@ export default {
         if (this.categoryItem?.title?.length > 23) {
           this.title = this.categoryItem?.title?.substring(0, 23) + "...";
         } else {
-          console.log(this.categoryItem?.title);
-
           this.title = this.categoryItem?.title;
         }
       } else {

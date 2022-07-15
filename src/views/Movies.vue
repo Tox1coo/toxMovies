@@ -1,28 +1,28 @@
 <template>
   <div v-if="isLoading" class="movie">
-    <BackDropBlock :infoItem="popularListFilms"></BackDropBlock>
+    <BackDropBlock :infoItem="popularList.movie"></BackDropBlock>
     <div class="movie__inner">
       <CategoryList
-        :mediaTypeList="popularListFilms"
+        :mediaTypeList="popularList.movie"
         :typeCategory="'Popular'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="topRatedList"
+        :mediaTypeList="topRatedList.movie"
         :typeCategory="'Top Rated'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="[]"
+        :mediaTypeList="upComingList.movie"
         :typeCategory="'UpComing'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="[]"
-        :typeCategory="'Now Plaing'"
+        :mediaTypeList="nowPlayingList.movie"
+        :typeCategory="'Now Playing'"
       ></CategoryList>
     </div>
   </div>
   <Loading class="loading__home" v-else></Loading>
 </template>
-<!-- TODO: доделать слайдеры с категориями! -->
+<!-- TODO: переделать передачу парамаетров для слайдера с типами и тд -->
 <script>
 /* eslint-disable-next-line no-unused-vars */
 import BackDropBlock from "@/components/BackDropBlock.vue";
@@ -35,11 +35,17 @@ export default {
     BackDropBlock,
     CategoryList,
   },
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   methods: {
     ...mapActions({
-      getTopRatedList: "movies/getTopRatedList",
-      getUpComingList: "movies/getUpComingList",
-      getNowPlayingList: "movies/getNowPlayingList",
+      getTopRatedList: "category/getTopRatedList",
+      getUpComingList: "category/getUpComingList",
+      getNowPlayingList: "category/getNowPlayingList",
+      getPopularList: "category/getPopularList",
     }),
   },
 
@@ -50,18 +56,22 @@ export default {
         page: 1,
         region: this.region,
       };
+      await this.getPopularList(config);
       await this.getTopRatedList(config);
+      await this.getNowPlayingList(config);
+      await this.getUpComingList(config);
     } catch (error) {
       console.log(error);
+    } finally {
+      this.isLoading = true;
     }
   },
   computed: {
     ...mapState({
-      isLoading: (state) => state.movies.isLoading,
-      popularListFilms: (state) => state.movies.popularListFilms,
-      topRatedList: (state) => state.movies.topRatedList,
-      upComingListFilms: (state) => state.movies.upComingListFilms,
-      nowPlayingListFilms: (state) => state.movies.nowPlayingListFilms,
+      popularList: (state) => state.category.popularList,
+      topRatedList: (state) => state.category.topRatedList,
+      upComingList: (state) => state.category.upComingList,
+      nowPlayingList: (state) => state.category.nowPlayingList,
       region: (state) => state.movies.region,
     }),
   },

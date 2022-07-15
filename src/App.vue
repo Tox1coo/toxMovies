@@ -15,9 +15,9 @@ export default {
   methods: {
     ...mapActions({
       getGenresList: "movies/getGenresMovies",
-      getPopularList: "movies/getPopularList",
+      getPopularList: "category/getPopularList",
       getGeolocation: "geo/getGeolocation",
-      getTrendingList: "movies/getTrendingList",
+      getTrendingList: "category/getTrendingList",
     }),
     ...mapMutations({
       setIsLoading: "movies/setIsLoading",
@@ -27,19 +27,7 @@ export default {
   async created() {
     try {
       await this.getGeolocation();
-      this.getGenresList();
-      const config = {
-        region: this.region,
-      };
-      await this.getPopularList(config);
-      const configTrending = {
-        time: "week",
-        type: "tv",
-        page: 1,
-      };
-      await this.getTrendingList(configTrending);
-      configTrending.type = "movie";
-      await this.getTrendingList(configTrending);
+      await this.getGenresList();
     } catch (error) {
       console.log(error);
     } finally {

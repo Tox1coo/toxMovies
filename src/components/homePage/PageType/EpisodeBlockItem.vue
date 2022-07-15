@@ -26,7 +26,7 @@
     </div>
   </div>
 </template>
-
+<!-- сделать проверку на null -->
 <script>
 import { mapState } from "vuex";
 export default {

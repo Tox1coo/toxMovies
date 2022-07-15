@@ -94,7 +94,6 @@ export default {
     setTimeout(() => {
       console.log(this.$refs.swipeItem);
     }, 500); */
-    console.log(this.mediaTypeList);
   },
   methods: {
     onSwipe(swipe) {
@@ -116,15 +115,20 @@ export default {
       }
     },
     getLink() {
-      if (this.typeCategory != "Top Rated") {
+      console.log(this.typeCategory);
+      if (this.typeCategory === "Top Rated") {
+        this.$router.push(
+          `${this.mediaTypeList[0].media_type}/category/top_rated`
+        );
+      } else if (this.typeCategory == "Now Playing") {
+        this.$router.push(
+          `${this.mediaTypeList[0].media_type}/category/now_playing`
+        );
+      } else {
         this.$router.push(
           `${
             this.mediaTypeList[0].media_type
           }/category/${this.typeCategory.toLowerCase()}`
-        );
-      } else {
-        this.$router.push(
-          `${this.mediaTypeList[0].media_type}/category/top_rated`
         );
       }
     },
