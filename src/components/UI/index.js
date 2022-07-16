@@ -8,8 +8,7 @@ import DropList from '@/components/UI/DropList';
 import ModalSlider from '@/components/UI/ModalSlider';
 import ModalSliderItem from '@/components/UI/ModalSliderItem';
 import Loading from '@/components/UI/Loading';
-
-
+import SearchInput from '@/components/UI/SearchInput';
 
 export default [
 	NavBar,
@@ -21,5 +20,6 @@ export default [
 	DropList,
 	ModalSlider,
 	ModalSliderItem,
-	Loading
+	Loading,
+	SearchInput,
 ]

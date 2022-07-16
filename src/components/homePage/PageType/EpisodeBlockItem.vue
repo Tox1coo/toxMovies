@@ -1,13 +1,15 @@
 <template>
   <div class="episode__block-item">
-    <img :src="`${IMAGE_URL}/w400${episode.still_path}`" :alt="episode.name" />
+    <img
+      v-if="episode?.still_path != null || episode?.still_path != undefined"
+      :src="`${IMAGE_URL}/original${episode.still_path}`"
+      :alt="episode.name"
+    />
     <div class="episode__block-overview">
       <h3
         :style="{
           'font-size': 16 + 'px',
           'margin-bottom': 5 + 'px',
-          flex: `1 1 auto`,
-          height: '100%',
         }"
         class="title title--slider"
       >
@@ -59,9 +61,25 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    position: relative;
     width: 400px;
+    min-height: 300px;
     & img {
       min-height: 300px;
+      position: relative;
+      z-index: 1111;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      display: flex;
+      top: 50%;
+      height: 64px;
+      width: 64px;
+      left: 50%;
+      z-index: 2;
+      transform: translate(-50%, -50%);
+      background-image: url("../../../assets/error.png");
     }
   }
   &-overview {

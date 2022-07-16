@@ -53,7 +53,7 @@ export default {
     content: "";
     display: block;
     position: absolute;
-    z-index: 1000;
+    z-index: 2;
     left: 50%;
     top: 50%;
     height: 64px;

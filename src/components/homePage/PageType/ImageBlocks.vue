@@ -1,4 +1,4 @@
-<template>
+<template v-if="titleBlock !== 'logos'">
   <div class="image__inner-top">
     <h2 class="title title--image">{{ titleBlock.toUpperCase() }}</h2>
     <span>{{ imageList.length }} фото</span>
@@ -55,7 +55,7 @@ export default {
 <style lang="scss" scoped>
 .image__blocks {
   display: flex;
-  gap: 15px;
+  gap: 11px;
   flex-wrap: wrap;
 }
 

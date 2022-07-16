@@ -12,17 +12,27 @@
         <OverviewBlock
           v-if="currentTab.title === 'Overview'"
           :overviewItem="pageItem"
-          :director="directoryFilm"
-          :castList="castList"
+          :director="getDirectoryFilm"
+          :castList="getCastList"
         ></OverviewBlock>
-        <VideoBlock v-if="currentTab.title === 'Videos'"></VideoBlock>
-        <ImagesBlock v-if="currentTab.title === 'Photos'"></ImagesBlock>
-        <SeasonBlock v-if="currentTab.title === 'Seasons'"></SeasonBlock>
+        <VideoBlock
+          :itemVideos="pageItem.videos.results"
+          v-if="currentTab.title === 'Videos'"
+        ></VideoBlock>
+        <ImagesBlock
+          :itemPhoto="pageItem.images"
+          v-if="currentTab.title === 'Photos'"
+        ></ImagesBlock>
+        <SeasonBlock
+          :tvShow="pageItem"
+          v-if="currentTab.title === 'Seasons'"
+        ></SeasonBlock>
       </div>
       <CategoryList
-        :mediaTypeList="similarList"
+        :mediaTypeList="pageItem.similar.results"
+        :media="$route.params.media"
         :showIsAll="false"
-        :typeCategory="'Посмотреть еще'"
+        :title="'Посмотреть еще'"
       ></CategoryList>
     </div>
   </div>
@@ -31,7 +41,7 @@
 <!-- TODO: проверить правильность выбора трейлера после перехода по ссылке на фильмах и сериалах 'Посмотреть еще' -->
 <script>
 import BackDropBlock from "@/components/BackDropBlock";
-import { mapActions, mapState } from "vuex";
+import { getMovie, getTVShow } from "@/api";
 import OverviewBlock from "@/components/homePage/PageType/OverviewBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 import VideoBlock from "@/components/homePage/PageType/VideoBlock.vue";
@@ -67,14 +77,6 @@ export default {
     SeasonBlock,
   },
   methods: {
-    ...mapActions({
-      getFilm: "movies/getFilm",
-      getSerials: "movies/getSerials",
-      getCreditsInfo: "movies/getCreditsInfo",
-      getSimilar: "movies/getSimilar",
-      getImages: "movies/getImages",
-      getSeasonsInfo: "movies/getSeasonsInfo",
-    }),
     setCurrentTab(currentTab) {
       this.prevTab = this.currentTab;
       this.currentTab = currentTab;
@@ -82,8 +84,7 @@ export default {
     async getItem() {
       try {
         if (this.media === "tv") {
-          await this.getSerials(this.id);
-          this.pageItem = this.serial;
+          this.pageItem = await getTVShow(this.id);
           this.tabsList = [
             {
               title: "Overview",
@@ -93,17 +94,8 @@ export default {
             { title: "Videos", id: 2 },
             { title: "Photos", id: 3 },
           ];
-          const config = {
-            media_type: this.media,
-            id: this.id,
-          };
-          await this.getCreditsInfo(config);
-          await this.getOverviewInfo();
-          await this.getImages(config);
-          await this.getSeasonsInfo();
-          this.isLoading = true;
         } else {
-          await this.getFilm(this.id);
+          this.pageItem = await getMovie(this.id);
           this.tabsList = [
             {
               title: "Overview",
@@ -112,34 +104,14 @@ export default {
             { title: "Videos", id: 1 },
             { title: "Photos", id: 2 },
           ];
-          setTimeout(async () => {
-            this.pageItem = this.film;
-            const config = {
-              media_type: this.media,
-              id: this.id,
-            };
-            await this.getCreditsInfo(config);
-            await this.getOverviewInfo();
-            await this.getImages(config);
-
-            this.isLoading = true;
-          }, 500);
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        this.isLoading = true;
       }
     },
-    async getOverviewInfo() {
-      this.castList = this.creditsItem.cast;
-      this.directoryFilm = await this.creditsItem.crew.filter(
-        (crewPerson) => crewPerson.job === "Director"
-      );
-      const config = {
-        media_type: this.media,
-        id: this.id,
-      };
-      await this.getSimilar(config);
-    },
+
     resetData() {
       this.currentTab = {
         title: "Overview",
@@ -156,12 +128,14 @@ export default {
     this.id = this.$route.params.id;
   },
   computed: {
-    ...mapState({
-      film: (state) => state.movies.film,
-      serial: (state) => state.movies.serial,
-      creditsItem: (state) => state.movies.creditsItem,
-      similarList: (state) => state.movies.similarList,
-    }),
+    getDirectoryFilm() {
+      return this.pageItem.credits.crew.filter(
+        (crewPerson) => crewPerson.job === "Director"
+      );
+    },
+    getCastList() {
+      return this.pageItem.credits.cast;
+    },
   },
   watch: {
     id() {

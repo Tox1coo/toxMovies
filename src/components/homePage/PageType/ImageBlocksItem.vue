@@ -10,6 +10,7 @@
     class="image__blocks-item"
   >
     <img
+      v-if="imageItem.file_path != null"
       class="image__img"
       :src="`${IMAGE_URL}/w500${imageItem.file_path}`"
       :alt="imageItem.file_path"
@@ -43,6 +44,8 @@ export default {
   width: 300px;
   transition: all 0.2s ease 0s;
   height: 100%;
+  position: relative;
+  z-index: 2;
 }
 .image__blocks-item {
   background-color: rgba(#999, 0.2);
@@ -51,7 +54,19 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    display: flex;
+    top: 50%;
+    height: 64px;
+    width: 64px;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    background-image: url("../../../assets/error.png");
+  }
   &:hover {
     img {
       transform: scale(1.02);

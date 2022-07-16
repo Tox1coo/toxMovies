@@ -3,7 +3,11 @@
     <div class="overview__inner">
       <div class="overview__inner-top overview__top">
         <div class="overview__top-poster">
-          <img :src="`${IMAGE_URL}/w342/${overviewItem.poster_path}`" alt="" />
+          <img
+            v-if="overviewItem.poster_path != null"
+            :src="`${IMAGE_URL}/w342/${overviewItem.poster_path}`"
+            alt=""
+          />
         </div>
         <div class="overview__top-info info">
           <div v-if="this.$route.params.media === 'movie'" class="info__title">
@@ -63,16 +67,26 @@
               <li v-if="this.$route.params.media === 'movie'">
                 <div>Director:</div>
                 <div>
-                  <a href>{{ director[0]?.name }}</a>
+                  <a
+                    @click="$router.push(`/person/${director[0]?.id}`)"
+                    class="overview__link"
+                    >{{ director[0]?.name }}</a
+                  >
                 </div>
               </li>
               <li v-if="this.$route.params.media === 'tv'">
                 <div>Creator:</div>
-                <div>
-                  <a class="overview__link" href>{{
-                    overviewItem?.created_by[0]?.name
-                  }}</a>
+                <div v-if="overviewItem?.created_by[0]?.name != undefined">
+                  <a
+                    @click="
+                      $router.push(`/person/${overviewItem?.created_by[0]?.id}`)
+                    "
+                    class="overview__link"
+                    clas="overview__link"
+                    >{{ overviewItem?.created_by[0]?.name }}</a
+                  >
                 </div>
+                <div v-else>—</div>
               </li>
               <li>
                 <div>Budget:</div>
@@ -114,6 +128,9 @@
                   <a
                     class="overview__link list-link"
                     v-for="genre in overviewItem?.genres"
+                    @click="
+                      $router.push(`/genre/${genre.id}/${$route.params.media}`)
+                    "
                     :key="genre.id"
                     >{{ genre.name }}</a
                   >
@@ -145,18 +162,29 @@
               </li>
               <li v-if="this.$route.params.media === 'movie'">
                 <div>Production:</div>
-                <div>
+                <div
+                  v-if="
+                    overviewItem?.production_companies?.length > 0 ||
+                    overviewItem?.production_companies != undefined
+                  "
+                >
                   <span
                     class="list-link"
-                    v-for="country in overviewItem?.production_companies"
-                    :key="country.id"
-                    >{{ country.name }}</span
+                    v-for="comp in overviewItem?.production_companies"
+                    :key="comp.id"
+                    >{{ comp.name }}</span
                   >
                 </div>
+                <div v-else>—</div>
               </li>
               <li>
                 <div>Production Countries:</div>
-                <div>
+                <div
+                  v-if="
+                    overviewItem?.production_countries?.length > 0 ||
+                    overviewItem?.production_countries != undefined
+                  "
+                >
                   <span
                     class="list-link"
                     v-for="country in overviewItem?.production_countries"
@@ -164,6 +192,7 @@
                     >{{ country.name }}</span
                   >
                 </div>
+                <div v-else>—</div>
               </li>
               <li v-if="this.$route.params.media === 'tv'">
                 <div>Network:</div>
@@ -179,7 +208,7 @@
         <CategoryList
           :mediaTypeList="castList"
           :showIsAll="false"
-          :typeCategory="'Cast'"
+          :title="'Cast'"
         ></CategoryList>
       </div>
     </div>
@@ -241,8 +270,33 @@ export default {
     padding: 50px;
     padding-top: 30px;
     &-poster {
+      min-width: 342px;
+      border: 1px solid rgba(#999, 0.2);
       animation: anim-poster 2s cubic-bezier(0.14, 0.47, 0.2, 1.15);
+      position: relative;
+      img {
+        position: relative;
+        z-index: 3;
+      }
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        background-image: url("../../../assets/error.png");
+        background-repeat: no-repeat;
+      }
     }
+  }
+  &__link {
+    text-decoration: underline;
+    color: #11acff;
+    cursor: pointer;
   }
   margin-bottom: 25px;
 }
@@ -257,6 +311,7 @@ export default {
 }
 .list-link {
   margin-right: 5px;
+
   &::after {
     content: ",";
     display: inline-block;

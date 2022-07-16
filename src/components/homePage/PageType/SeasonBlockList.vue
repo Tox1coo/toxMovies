@@ -9,7 +9,7 @@
     class="season__block"
   >
     <img :src="`${IMAGE_URL}/w185${seasonInfo.poster_path}`" alt="" />
-    <h3 class="title title--season">Сезон № {{ seasonInfo.season_number }}</h3>
+    <h3 class="title title--season">Season № {{ seasonInfo.season_number }}</h3>
   </div>
 </template>
 

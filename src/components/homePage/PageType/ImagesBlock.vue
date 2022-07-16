@@ -2,7 +2,7 @@
   <div class="image">
     <div class="image__inner">
       <ImageBlocks
-        v-for="(image, key) in imagesList"
+        v-for="(image, key) in itemPhoto"
         :key="key"
         :imageList="image"
         :titleBlock="key"
@@ -12,17 +12,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import ImageBlocks from "@/components/homePage/PageType/ImageBlocks.vue";
 export default {
   data() {
     return {};
   },
-  computed: {
-    ...mapState({
-      imagesList: (state) => state.movies.imagesList,
-    }),
+  props: {
+    itemPhoto: {
+      type: Object,
+    },
   },
+
   components: { ImageBlocks },
 };
 </script>

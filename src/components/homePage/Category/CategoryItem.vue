@@ -1,20 +1,7 @@
 <template>
   <div class="category__item">
     <div @click="getLink()" class="category__item-img">
-      <img
-        v-if="
-          this.categoryItem?.media_type != undefined ||
-          this.categoryItem?.gender === undefined
-        "
-        class="lazyloading"
-        :src="`${IMAGE_URL}/w342/${categoryItem?.poster_path}`"
-        alt=""
-      /><img
-        v-else
-        class="lazyloading"
-        :src="`${IMAGE_URL}/w342/${categoryItem?.profile_path}`"
-        alt=""
-      />
+      <img class="lazyloading" :src="getImageURL" alt="" />
     </div>
     <div class="category__item-body">
       <h3 class="title title--slider">
@@ -51,16 +38,21 @@ export default {
     categoryItem: {
       type: Object,
     },
+
+    media: {
+      type: String,
+      default: "",
+    },
   },
   mounted() {
     setTimeout(() => {
-      if (this.categoryItem?.media_type === "tv") {
+      if (this.media === "tv") {
         if (this.categoryItem?.name.length > 23) {
           this.title = this.categoryItem?.name?.substring(0, 23) + "...";
         } else {
           this.title = this.categoryItem?.name;
         }
-      } else if (this.categoryItem?.media_type === "movie") {
+      } else if (this.media === "movie") {
         if (this.categoryItem?.title?.length > 23) {
           this.title = this.categoryItem?.title?.substring(0, 23) + "...";
         } else {
@@ -78,12 +70,9 @@ export default {
   },
   methods: {
     getLink() {
+      console.log(this.media);
       if (this.categoryItem?.gender === undefined) {
-        this.$router.push(
-          `/${this.categoryItem?.media_type || this.$route.params.media}/${
-            this.categoryItem.id
-          }`
-        );
+        this.$router.push(`/${this.media}/${this.categoryItem.id}`);
       } else {
         this.$router.push(`/person/${this.categoryItem.id}`);
       }
@@ -93,6 +82,11 @@ export default {
     ...mapState({
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
     }),
+    getImageURL() {
+      return this.media === "person" || this.categoryItem?.gender !== undefined
+        ? `${this.IMAGE_URL}/w342${this.categoryItem.profile_path}`
+        : `${this.IMAGE_URL}/w342${this.categoryItem?.poster_path}`;
+    },
   },
 };
 </script>
@@ -106,6 +100,7 @@ export default {
   transition: all 0.4s ease 0s;
   min-height: 450px;
   overflow: hidden;
+  max-width: 215px;
   &-img {
     background-color: #202124;
     position: relative;

@@ -1,34 +1,40 @@
 <template>
   <div v-if="isLoading" class="movie">
-    <BackDropBlock :infoItem="popularList.movie"></BackDropBlock>
+    <BackDropBlock :infoItem="popularList.results"></BackDropBlock>
     <div class="movie__inner">
       <CategoryList
-        :mediaTypeList="popularList.movie"
-        :typeCategory="'Popular'"
+        :mediaTypeList="popularList.results"
+        :typeCategory="'popular'"
+        :media="'movie'"
+        :title="getTitlePopular"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="topRatedList.movie"
-        :typeCategory="'Top Rated'"
+        :mediaTypeList="topRatedList.results"
+        :typeCategory="'top_rated'"
+        :media="'movie'"
+        :title="getTitleTopRated"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="upComingList.movie"
-        :typeCategory="'UpComing'"
+        :mediaTypeList="upComingList.results"
+        :typeCategory="'upcoming'"
+        :media="'movie'"
+        :title="getTitleUpComing"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="nowPlayingList.movie"
-        :typeCategory="'Now Playing'"
+        :mediaTypeList="nowPlayingList.results"
+        :typeCategory="'now_playing'"
+        :media="'movie'"
+        :title="getTitleNow"
       ></CategoryList>
     </div>
   </div>
   <Loading class="loading__home" v-else></Loading>
 </template>
-<!-- TODO: переделать передачу парамаетров для слайдера с типами и тд -->
 <script>
 /* eslint-disable-next-line no-unused-vars */
 import BackDropBlock from "@/components/BackDropBlock.vue";
-import { mapState, mapActions, mapMutations } from "vuex";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
-
+import { getMovies, getLists } from "@/api";
 export default {
   name: "Movies",
   components: {
@@ -38,35 +44,19 @@ export default {
   data() {
     return {
       isLoading: false,
+      popularList: [],
+      topRatedList: [],
+      upComingList: [],
+      nowPlayingList: [],
     };
-  },
-  methods: {
-    ...mapActions({
-      getTopRatedList: "category/getTopRatedList",
-      getUpComingList: "category/getUpComingList",
-      getNowPlayingList: "category/getNowPlayingList",
-      getPopularList: "category/getPopularList",
-    }),
-    ...mapMutations({
-      clearList: "category/clearList",
-    }),
   },
 
   async mounted() {
-    this.clearList({ list: "popularList", media: "movie" });
-    this.clearList({ list: "topRatedList", media: "movie" });
-    this.clearList({ list: "upComingList", media: "movie" });
-    this.clearList({ list: "nowPlayingList", media: "movie" });
     try {
-      const config = {
-        media: "movie",
-        page: 1,
-        region: this.region,
-      };
-      await this.getPopularList(config);
-      await this.getTopRatedList(config);
-      await this.getNowPlayingList(config);
-      await this.getUpComingList(config);
+      this.popularList = await getMovies("popular");
+      this.topRatedList = await getMovies("top_rated");
+      this.upComingList = await getMovies("upcoming");
+      this.nowPlayingList = await getMovies("now_playing");
     } catch (error) {
       console.log(error);
     } finally {
@@ -74,13 +64,18 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      popularList: (state) => state.category.popularList,
-      topRatedList: (state) => state.category.topRatedList,
-      upComingList: (state) => state.category.upComingList,
-      nowPlayingList: (state) => state.category.nowPlayingList,
-      region: (state) => state.movies.region,
-    }),
+    getTitlePopular() {
+      return getLists("movie", "popular").title;
+    },
+    getTitleTopRated() {
+      return getLists("movie", "top_rated").title;
+    },
+    getTitleUpComing() {
+      return getLists("movie", "upcoming").title;
+    },
+    getTitleNow() {
+      return getLists("movie", "now_playing").title;
+    },
   },
 };
 </script>
@@ -89,6 +84,9 @@ export default {
 .movie {
   &__inner {
     margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
   }
 }
 </style>

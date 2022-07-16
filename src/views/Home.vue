@@ -1,19 +1,21 @@
 <template>
   <div v-if="isLoading" class="home">
     <div class="home__header">
-      <BackDropBlockVue
-        :infoItem="popularList.movie.concat(popularList.tv)"
-      ></BackDropBlockVue>
+      <BackDropBlockVue :infoItem="backdropList"></BackDropBlockVue>
     </div>
     <div class="home__body">
       <CategoryList
-        :typeCategory="'Trending'"
-        :mediaTypeList="trendingList['movie']"
+        :typeCategory="'trending'"
+        :mediaTypeList="trendingMovies.results"
+        :media="'movie'"
+        :title="trendingMoviesTitle"
       ></CategoryList>
 
       <CategoryList
-        :typeCategory="'Trending'"
-        :mediaTypeList="trendingList['tv']"
+        :typeCategory="'trending'"
+        :mediaTypeList="trendingTV.results"
+        :media="'tv'"
+        :title="trendingTVTitle"
       ></CategoryList>
     </div>
   </div>
@@ -21,6 +23,8 @@
 </template>
 
 <script>
+import { getMovies, getTVShows, getTrending, getLists } from "@/api";
+
 import { mapActions, mapMutations, mapState } from "vuex";
 import BackDropBlockVue from "@/components/BackDropBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
@@ -30,6 +34,9 @@ export default {
   data() {
     return {
       isLoading: false,
+      backdropList: [],
+      trendingMovies: [],
+      trendingTV: [],
     };
   },
   methods: {
@@ -45,30 +52,18 @@ export default {
   },
 
   async created() {
+    /*     const list = getMovies("trending");
+    console.log(list); */
     try {
-      const config = {
-        region: this.region,
-        media: "movie",
-      };
-      console.log(new Date());
+      const movie = await getMovies("popular");
+      const tv = await getTVShows("popular");
 
-      await this.getPopularList(config);
-
-      console.log(new Date());
-      config.media = "tv";
-
-      await this.getPopularList(config);
-      const configTrending = {
-        time: "week",
-        media: "tv",
-        page: 1,
-      };
+      this.backdropList = [...movie.results, ...tv.results];
 
       this.clearList({ list: "trendingList", media: "movie" });
       this.clearList({ list: "trendingList", media: "tv" });
-      await this.getTrendingList(configTrending);
-      configTrending.media = "movie";
-      await this.getTrendingList(configTrending);
+      this.trendingMovies = await getTrending("movie");
+      this.trendingTV = await getTrending("tv");
     } catch (error) {
       console.log(error);
     } finally {
@@ -81,6 +76,13 @@ export default {
       popularList: (state) => state.category.popularList,
       trendingList: (state) => state.category.trendingList,
     }),
+
+    trendingMoviesTitle() {
+      return getLists("movie", "trending").title;
+    },
+    trendingTVTitle() {
+      return getLists("tv", "trending").title;
+    },
   },
 };
 </script>

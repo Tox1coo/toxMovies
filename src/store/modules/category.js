@@ -48,6 +48,9 @@ export const category = {
 			state.popularList[popularList.media] = [...state.popularList[popularList.media], ...popularList.list]
 		},
 		updateTrendingList(state, trendingList) {
+			trendingList.list.forEach(element => {
+				element.media_type = trendingList.media
+			});
 			state.trendingList[trendingList.media] = [...state.trendingList[trendingList.media], ...trendingList.list]
 		},
 		updateUpComingList(state, upComingList) {

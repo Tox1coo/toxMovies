@@ -19,24 +19,33 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 import SeasonBlockList from "@/components/homePage/PageType/SeasonBlockList.vue";
 import EpisodeBlock from "@/components/homePage/PageType/EpisodeBlock.vue";
+import { getEpisodesTVShows } from "@/api";
 export default {
   data() {
     return {
       visibleEpisodeList: false,
       season: 0,
+      seasonInfo: [],
     };
   },
-  computed: {
-    ...mapState({
-      seasonInfo: (state) => state.movies.seasonInfo,
-    }),
+  async created() {
+    const length = this.tvShow.number_of_seasons;
+    let seasonList = [];
+    for (let index = 0; index < length; index++) {
+      let indexSeason = index;
+      seasonList = await getEpisodesTVShows(this.tvShow.id, ++indexSeason);
+      this.seasonInfo.push(seasonList);
+    }
   },
+
   components: { SeasonBlockList, EpisodeBlock },
+  props: {
+    tvShow: { type: Object, required: true },
+  },
   methods: {
-    showEpisodes(config) {
+    async showEpisodes(config) {
       this.visibleEpisodeList = config.visibleEpisodeList;
       this.season = config.season;
     },

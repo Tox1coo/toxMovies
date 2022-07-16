@@ -6,6 +6,7 @@ import PagePerson from "@/views/PagePerson.vue";
 import PageItem from "@/views/PageItem.vue";
 import Search from "@/views/Search.vue";
 import Category from "@/views/Category.vue";
+import Genre from "@/views/Genre.vue";
 
 const routes = [
   {
@@ -40,6 +41,10 @@ const routes = [
   {
     path: "/:media/category/:type",
     component: Category,
+  },
+  {
+    path: "/genre/:id/:media",
+    component: Genre,
   }
 ];
 

@@ -3,14 +3,16 @@
     <Transition name="slidedown">
       <div @click.stop class="modal__inner">
         <iframe
+          v-if="!trailerURL?.error"
           width="100%"
           height="100%"
-          :src="`https://www.youtube.com/embed/${trailerKey}`"
+          :src="trailerURL.url"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
+        <h2 v-else-if="trailerURL?.error">Трейлера нет</h2>
       </div>
     </Transition>
   </div>
@@ -19,7 +21,7 @@
 <script>
 /*  eslint-disable no-unused-vars  */
 import toggleMixin from "@/mixins/toggleMixins";
-import { mapMutations, mapState } from "vuex";
+import { mapMutations } from "vuex";
 export default {
   name: "ModalTrailer",
   methods: {
@@ -28,10 +30,11 @@ export default {
     }),
   },
   mixins: [toggleMixin],
-  computed: {
-    ...mapState({
-      trailerKey: (state) => state.movies.trailerKey,
-    }),
+
+  props: {
+    trailerURL: {
+      type: Object,
+    },
   },
 };
 </script>
@@ -53,15 +56,37 @@ export default {
     margin: auto;
     background: $main-bgcolor;
     border-radius: 24px;
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 128px;
+      height: 128px;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      background-image: url("../../assets/empty-folder.png");
+      background-repeat: no-repeat;
+    }
 
     width: 1500px;
     height: 900px;
     cursor: default;
     display: flex;
+    h2 {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      z-index: 1;
+      transform: translate(-50%, 60%);
+    }
   }
 }
 iframe {
   border-radius: 20px;
+  position: relative;
+  z-index: 1000;
 }
 
 .slidedown-enter-active {

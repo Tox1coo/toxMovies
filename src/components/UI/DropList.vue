@@ -6,7 +6,6 @@
       v-for="(type, index) in listTypeVideos"
       :value="type"
       :key="index"
-      @click="setSearchList(type)"
     >
       {{ type }}
     </option>
@@ -14,7 +13,6 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
 /* eslint-disable prettier/prettier */
 
 export default {
@@ -31,28 +29,27 @@ export default {
       required: false,
     },
     visibleDropList: Boolean,
+    sortedItem: {
+      type: String,
+      default: "All",
+    },
   },
 
   methods: {
-    ...mapMutations({
-      updateSelectedSort: "movies/updateSelectedSort",
-      updateSelectedSeason: "movies/updateSelectedSeason",
-    }),
     setSearchList(element) {
-      this.updateSelectedSort(element.target.value);
+      this.$emit("update:sortedItem", element.target.value);
     },
   },
   mounted() {
-    this.videoLists.forEach((video) => {
-      if (!this.listTypeVideos.includes(video.type)) {
-        this.listTypeVideos.push(video.type);
-      }
-    });
-  },
-  computed: {
-    ...mapState({
-      videoLists: (state) => state.movies.videoLists,
-    }),
+    if (this.list[0]?.type != undefined) {
+      this.list.forEach((video) => {
+        if (!this.listTypeVideos.includes(video.type)) {
+          this.listTypeVideos.push(video.type);
+        }
+      });
+    } else {
+      this.listTypeVideos = this.list;
+    }
   },
 };
 </script>

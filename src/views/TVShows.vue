@@ -1,22 +1,30 @@
 <template>
   <div v-if="isLoading" class="tv">
-    <BackDropBlock :infoItem="popularList.tv"></BackDropBlock>
+    <BackDropBlock :infoItem="popularList.results"></BackDropBlock>
     <div class="tv__inner">
       <CategoryList
-        :mediaTypeList="popularList.tv"
-        :typeCategory="'Popular'"
+        :mediaTypeList="popularList.results"
+        :typeCategory="'popular'"
+        :title="getTitlePopular"
+        :media="'tv'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="topRatedList.tv"
-        :typeCategory="'Top Rated'"
+        :mediaTypeList="topRatedList.results"
+        :typeCategory="'top_rated'"
+        :title="getTitleTopRated"
+        :media="'tv'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="onTheAirList.tv"
-        :typeCategory="'On the Air'"
+        :mediaTypeList="onTheAirList.results"
+        :typeCategory="'on_the_air'"
+        :title="getTitleOnTheAirList"
+        :media="'tv'"
       ></CategoryList>
       <CategoryList
-        :mediaTypeList="airingTodayList.tv"
-        :typeCategory="'Airing Today'"
+        :mediaTypeList="airingTodayList.results"
+        :typeCategory="'airing_today'"
+        :title="getTitleAiringTodayList"
+        :media="'tv'"
       ></CategoryList>
     </div>
   </div>
@@ -26,8 +34,8 @@
 <script>
 /* eslint-disable-next-line no-unused-vars */
 import BackDropBlock from "@/components/BackDropBlock.vue";
-import { mapMutations, mapState, mapActions } from "vuex";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
+import { getTVShows, getLists } from "@/api";
 
 export default {
   name: "TVShows",
@@ -38,35 +46,19 @@ export default {
   data() {
     return {
       isLoading: false,
+      popularList: [],
+      topRatedList: [],
+      onTheAirList: [],
+      airingTodayList: [],
     };
-  },
-  methods: {
-    ...mapActions({
-      getTopRatedList: "category/getTopRatedList",
-      getPopularList: "category/getPopularList",
-      getAiringTodayList: "category/getAiringTodayList",
-      getOnTheAirList: "category/getOnTheAirList",
-    }),
-    ...mapMutations({
-      clearList: "category/clearList",
-    }),
   },
 
   async mounted() {
-    this.clearList({ list: "popularList", media: "tv" });
-    this.clearList({ list: "topRatedList", media: "tv" });
-    this.clearList({ list: "airingTodayList", media: "tv" });
-    this.clearList({ list: "onTheAirList", media: "tv" });
     try {
-      const config = {
-        media: "tv",
-        page: 1,
-        region: this.region,
-      };
-      await this.getPopularList(config);
-      await this.getTopRatedList(config);
-      await this.getAiringTodayList(config);
-      await this.getOnTheAirList(config);
+      this.popularList = await getTVShows("popular");
+      this.topRatedList = await getTVShows("top_rated");
+      this.onTheAirList = await getTVShows("on_the_air");
+      this.airingTodayList = await getTVShows("airing_today");
     } catch (error) {
       console.log(error);
     } finally {
@@ -74,13 +66,18 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      popularList: (state) => state.category.popularList,
-      topRatedList: (state) => state.category.topRatedList,
-      onTheAirList: (state) => state.category.onTheAirList,
-      airingTodayList: (state) => state.category.airingTodayList,
-      region: (state) => state.movies.region,
-    }),
+    getTitlePopular() {
+      return getLists("tv", "popular").title;
+    },
+    getTitleTopRated() {
+      return getLists("tv", "top_rated").title;
+    },
+    getTitleOnTheAirList() {
+      return getLists("tv", "on_the_air").title;
+    },
+    getTitleAiringTodayList() {
+      return getLists("tv", "airing_today").title;
+    },
   },
 };
 </script>
@@ -89,6 +86,9 @@ export default {
 .tv {
   &__inner {
     margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
   }
 }
 </style>

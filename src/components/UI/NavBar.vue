@@ -138,7 +138,7 @@
         </router-link>
       </li>
       <li class="nav__list-item">
-        <button class="nav__list-btn">
+        <button @click="updateShowSearch(true)" class="nav__list-btn">
           <svg
             version="1.1"
             id="Capa_1"
@@ -163,8 +163,14 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "NavBar",
+  methods: {
+    ...mapMutations({
+      updateShowSearch: "search/updateShowSearch",
+    }),
+  },
 };
 </script>
 

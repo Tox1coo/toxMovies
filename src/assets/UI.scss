@@ -39,12 +39,14 @@
   &--episode {
     font-size: 13px;
     color: #999;
+    flex: 1;
   }
 
   &--biography {
     font-size: 16px;
     margin-top: 16px;
     margin-bottom: 16px;
+    line-height: 1.4;
 
   }
 }

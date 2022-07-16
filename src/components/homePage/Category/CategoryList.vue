@@ -2,21 +2,17 @@
   <div ref="list" class="category">
     <div class="category__link">
       <h2>
-        {{ typeCategory }}
-        <span v-if="mediaTypeList[0]?.media_type === 'movie'">
-          Movie of week</span
-        >
-        <span v-else-if="mediaTypeList[0]?.media_type === 'tv'"
-          >TV Shows of week</span
-        >
+        {{ title }}
       </h2>
-      <a v-if="showIsAll && mediaTypeList.length > 0" @click="getLink()"
-        >Показать все</a
+      <a
+        v-if="showIsAll"
+        @click="this.$router.push(`${media}/category/${typeCategory}`)"
+        >Explore All</a
       >
     </div>
 
     <swiper
-      v-if="mediaTypeList.length > 0"
+      v-if="mediaTypeList?.length > 0"
       :slidesPerView="7.3"
       :spaceBetween="20"
       :slidesPerGroup="7"
@@ -29,17 +25,20 @@
         v-for="categoryItem in mediaTypeList"
         :key="categoryItem.id"
       >
-        <CategoryItem :categoryItem="categoryItem"></CategoryItem
+        <CategoryItem :media="media" :categoryItem="categoryItem"></CategoryItem
       ></swiper-slide>
       <swiper-slide>
-        <a v-if="showIsAll" @click="getLink()">
-          <div class="category__all">Показать все</div>
+        <a
+          v-if="showIsAll"
+          @click="this.$router.push(`${media}/category/${typeCategory}`)"
+        >
+          <div class="category__all">Explore All</div>
         </a>
       </swiper-slide>
     </swiper>
     <img
-      class="empty"
       v-else
+      class="empty"
       :src="require('@/assets/empty-folder.png')"
       alt=""
     />
@@ -76,8 +75,13 @@ export default {
     };
   },
   props: {
-    mediaTypeList: Array,
+    mediaTypeList: Object,
     typeCategory: String,
+    media: String,
+    title: {
+      type: String,
+      required: true,
+    },
     showIsAll: {
       type: Boolean,
       default: true,
@@ -112,32 +116,6 @@ export default {
       } else {
         swipe.navigation.$nextEl[0].style.opacity = "1";
         swipe.navigation.$nextEl[0].style.visibility = "visible";
-      }
-    },
-    getLink() {
-      console.log(this.typeCategory);
-      if (this.typeCategory === "Top Rated") {
-        this.$router.push(
-          `${this.mediaTypeList[0].media_type}/category/top_rated`
-        );
-      } else if (this.typeCategory == "Now Playing") {
-        this.$router.push(
-          `${this.mediaTypeList[0].media_type}/category/now_playing`
-        );
-      } else if (this.typeCategory == "On the Air") {
-        this.$router.push(
-          `${this.mediaTypeList[0].media_type}/category/on_the_air`
-        );
-      } else if (this.typeCategory == "Airing Today") {
-        this.$router.push(
-          `${this.mediaTypeList[0].media_type}/category/airing_today`
-        );
-      } else {
-        this.$router.push(
-          `${
-            this.mediaTypeList[0].media_type
-          }/category/${this.typeCategory.toLowerCase()}`
-        );
       }
     },
   },

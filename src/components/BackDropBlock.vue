@@ -20,8 +20,8 @@
               <span v-if="currentItem?.vote_count !== 0"
                 >{{ currentItem?.vote_count }} Отзывов</span
               >
-              <span v-if="this.serial != null">
-                Cезонов {{ serial?.last_episode_to_air?.season_number }}
+              <span v-if="currentItem?.seasons != undefined">
+                Cезонов {{ currentItem?.last_episode_to_air?.season_number }}
               </span>
               <span
                 v-if="
@@ -35,7 +35,10 @@
                   new Date(currentItem?.release_date).getFullYear()
                 }}</span
               >
-              <span v-if="rating">, Cert. {{ rating }}</span>
+              <span v-if="currentItem?.content_ratings?.results[0]?.rating"
+                >, Cert.
+                {{ currentItem?.content_ratings?.results[0]?.rating }}</span
+              >
             </div>
           </div>
         </div>
@@ -44,21 +47,23 @@
         </div>
         <TrailerButton></TrailerButton>
       </div>
-      <div class="backdrop__right">
-        <img
-          class="backdrop__right-img lazyloading"
-          :src="`${IMAGE_URL}/w780${currentItem?.backdrop_path}`"
-        />
+      <div v-if="getImage != ''" class="backdrop__right">
+        <img class="backdrop__right-img lazyloading" :src="getImage" />
       </div>
     </div>
   </div>
+  <ModalTrailer
+    v-if="isLoading"
+    :trailerURL="getTrailerItem"
+    :show="showTrailer"
+  ></ModalTrailer>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
 
-import { mapActions, mapState } from "vuex";
-
+import { mapState } from "vuex";
+import { getMovie, getTVShow, getTrailer } from "@/api";
 export default {
   data() {
     return {
@@ -73,38 +78,15 @@ export default {
     },
   },
   async mounted() {
-    try {
-      await this.getInfoItem();
-      const config = {};
-
-      setTimeout(() => {
-        if (this.serial != null) {
-          config.media_type = "tv";
-          config.language = "ru";
-          config.id = this.serial.id;
-        } else {
-          config.media_type = "movie";
-          config.language = "ru";
-          config.id = this.film.id;
-        }
-        this.getTrailerVideoList(config);
-      }, 1000);
-    } catch (error) {
-      console.log(error);
-    }
+    await this.getInfoItem();
   },
   methods: {
-    ...mapActions({
-      getSerials: "movies/getSerials",
-      getFilm: "movies/getFilm",
-      getTrailerVideoList: "movies/getTrailerVideoList",
-    }),
     async getInfoItem() {
       try {
         if (this.infoItem?.length > 1) {
           let flag = true;
           do {
-            const indexRandom = Math.floor(
+            var indexRandom = Math.floor(
               0 + Math.random() * (this.infoItem.length + 1 - 0)
             );
             const random = this.infoItem[indexRandom];
@@ -118,9 +100,9 @@ export default {
             }
           } while (flag);
           if (this.currentItem?.name != undefined) {
-            await this.getSerials(this.currentItem?.id);
+            this.currentItem = await getTVShow(this.infoItem[indexRandom]?.id);
           } else {
-            await this.getFilm(this.currentItem?.id);
+            this.currentItem = await getMovie(this.infoItem[indexRandom]?.id);
           }
         } else {
           this.currentItem = this.infoItem;
@@ -134,27 +116,20 @@ export default {
   },
   computed: {
     ...mapState({
-      serial: (state) => state.movies.serial,
-      film: (state) => state.movies.film,
-      rating: (state) => state.movies.rating,
-
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
+      showTrailer: (state) => state.movies.showTrailer,
     }),
+
+    getImage() {
+      return `${this.IMAGE_URL}/w780${this.currentItem?.backdrop_path}`;
+    },
+    getTrailerItem() {
+      return getTrailer(this.currentItem);
+    },
   },
   watch: {
-    infoItem(newInfoItem) {
+    infoItem() {
       this.getInfoItem();
-      const config = {};
-      if (this.serial != null) {
-        config.media_type = "tv";
-        config.language = "ru";
-        config.id = this.serial.id;
-      } else {
-        config.media_type = "movie";
-        config.language = "ru";
-        config.id = this.film.id;
-      }
-      this.getTrailerVideoList(config);
     },
   },
 };
