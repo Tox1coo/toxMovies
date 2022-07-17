@@ -1,10 +1,13 @@
 <template>
   <div class="episode__block-item">
-    <img
-      v-if="episode?.still_path != null || episode?.still_path != undefined"
-      :src="`${IMAGE_URL}/original${episode.still_path}`"
-      :alt="episode.name"
-    />
+    <div class="episode__block-img">
+      <img
+        v-if="episode?.still_path != null || episode?.still_path != undefined"
+        :src="`${IMAGE_URL}/original${episode.still_path}`"
+        :alt="episode.name"
+      />
+    </div>
+
     <div class="episode__block-overview">
       <h3
         :style="{
@@ -62,12 +65,27 @@ export default {
     flex-direction: column;
     gap: 5px;
     position: relative;
-    width: 400px;
-    min-height: 300px;
+    max-width: 400px;
+    min-width: 400px;
+
+    @media (max-width: 420px) {
+      max-width: 300px;
+      min-width: 300px;
+    }
+  }
+  &-img {
     & img {
+      max-width: 400px;
+      min-width: 400px;
+
       min-height: 300px;
       position: relative;
-      z-index: 1111;
+      z-index: 5;
+      @media (max-width: 420px) {
+        max-width: 300px;
+        min-width: 300px;
+        min-height: 200px;
+      }
     }
     &::before {
       content: "";

@@ -2,7 +2,7 @@
   <div class="video">
     <div class="video__top">
       <DropList v-model:sortedItem="sortedItem" :list="sorted"></DropList>
-      {{ sorted.length }} Videos
+      <span> {{ sorted.length }} Videos </span>
     </div>
     <div class="video__body">
       <VideoBlockItem
@@ -64,6 +64,24 @@ export default {
     gap: 15px;
     margin-top: 25px;
     position: relative;
+    @media (max-width: 1440px) {
+      justify-content: center;
+    }
+  }
+  &__top {
+    @media (max-width: 730px) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (max-width: 400px) {
+      span {
+        display: none;
+      }
+    }
+  }
+  @media (max-width: 650px) {
+    padding: 30px 0 50px;
   }
 }
 </style>

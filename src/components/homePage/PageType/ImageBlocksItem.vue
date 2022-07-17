@@ -10,9 +10,9 @@
     class="image__blocks-item"
   >
     <img
-      v-if="imageItem.file_path != null"
+      v-if="imageItem != {}"
       class="image__img"
-      :src="`${IMAGE_URL}/w500${imageItem.file_path}`"
+      :src="getImageURL"
       :alt="imageItem.file_path"
     />
   </div>
@@ -35,13 +35,20 @@ export default {
     ...mapState({
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
     }),
+
+    getImageURL() {
+      return this.imageItem.file_path != null
+        ? `${this.IMAGE_URL}/w500${this.imageItem.file_path}`
+        : "";
+    },
   },
 };
+// сделать ограничение по фото, чтобы не было ошибки 429 (слишком много запросов)
 </script>
 
 <style lang="scss" scoped>
 .image__img {
-  width: 300px;
+  width: 100%;
   transition: all 0.2s ease 0s;
   height: 100%;
   position: relative;
@@ -50,7 +57,7 @@ export default {
 .image__blocks-item {
   background-color: rgba(#999, 0.2);
   cursor: pointer;
-  width: 310px;
+  width: 295px;
   display: flex;
   justify-content: center;
   align-items: center;

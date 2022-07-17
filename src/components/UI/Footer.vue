@@ -61,6 +61,7 @@ export default {
     align-items: center;
     gap: 15px;
     margin-top: 10px;
+    padding-bottom: 15px;
     a {
       &:hover svg {
         fill: #c8c8c8;

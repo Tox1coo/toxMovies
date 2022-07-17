@@ -51,6 +51,31 @@ export default {
     }
     background-color: #2f2f2f;
   }
+
+  @media (max-width: 1050px) {
+    border-radius: 50%;
+    font-size: 0;
+    border-color: #fff;
+    display: block;
+    background: none;
+    position: absolute;
+    top: -250px;
+    left: 50%;
+    transform: translateX(-50%);
+    & svg {
+      width: 64px;
+      height: 64px;
+    }
+    &:hover {
+      & svg path {
+        fill: #fff;
+      }
+      background: none;
+    }
+  }
+  @media (max-width: 500px) {
+    top: -200px;
+  }
 }
 path {
   transition: fill 0.2s ease 0s;

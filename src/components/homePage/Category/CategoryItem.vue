@@ -1,7 +1,15 @@
 <template>
   <div class="category__item">
     <div @click="getLink()" class="category__item-img">
-      <img class="lazyloading" :src="getImageURL" alt="" />
+      <img
+        v-if="
+          (categoryItem?.poster_path != null) | undefined ||
+          (categoryItem?.profile_path != null) | undefined
+        "
+        class="lazyloading"
+        :src="getImageURL"
+        alt=""
+      />
     </div>
     <div class="category__item-body">
       <h3 class="title title--slider">
@@ -100,10 +108,11 @@ export default {
   transition: all 0.4s ease 0s;
   min-height: 450px;
   overflow: hidden;
-  max-width: 215px;
   &-img {
     background-color: #202124;
     position: relative;
+    max-height: 355px;
+
     &::after {
       content: "";
       position: absolute;
@@ -118,18 +127,16 @@ export default {
     }
     cursor: pointer;
     min-width: 215px;
-    max-width: 215px;
+    height: 355px;
+    width: 100%;
 
-    min-height: 355px;
-    max-height: 355px;
     img {
-      min-height: 355px;
-      max-height: 355px;
-      transform: scale(1);
-      position: relative;
-      z-index: 1000;
-      transition: all 0.2s ease 0s;
+      height: 100%;
 
+      transform: scale(1);
+      position: absolute;
+      z-index: 998;
+      transition: all 0.2s ease 0s;
       width: 100%;
     }
     &:hover {
@@ -139,6 +146,7 @@ export default {
       }
     }
   }
+
   &-body {
     flex: 1;
     display: flex;

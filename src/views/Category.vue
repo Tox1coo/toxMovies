@@ -2,12 +2,14 @@
   <div class="category">
     <h2>{{ getTitle }}</h2>
     <div class="category__inner">
-      <CategoryItem
-        v-for="categoryItem in categoryList.results"
-        :key="categoryItem.id"
-        :categoryItem="categoryItem"
-        :media="media"
-      ></CategoryItem>
+      <transition-group name="listAnim">
+        <CategoryItem
+          v-for="categoryItem in categoryList.results"
+          :key="categoryItem.id"
+          :categoryItem="categoryItem"
+          :media="media"
+        ></CategoryItem>
+      </transition-group>
     </div>
     <div
       v-if="categoryList?.results?.length > 0"
@@ -121,16 +123,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.observer {
-  height: 10px;
-}
-
 .category {
+  h2 {
+    margin-top: 30px;
+  }
   &__inner {
-    padding-top: 50px;
+    padding-top: 30px;
     display: flex;
     gap: 25px;
     flex-wrap: wrap;
+    @media (max-width: 1120px) {
+      justify-content: center;
+    }
   }
+}
+
+.listAnim-active,
+.listAnim-leave-active {
+  transition: all 1s ease;
+}
+.listAnim-enter-from,
+.listAnim-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

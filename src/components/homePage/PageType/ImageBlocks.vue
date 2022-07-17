@@ -1,4 +1,4 @@
-<template v-if="titleBlock !== 'logos'">
+<template >
   <div class="image__inner-top">
     <h2 class="title title--image">{{ titleBlock.toUpperCase() }}</h2>
     <span>{{ imageList.length }} фото</span>
@@ -57,12 +57,18 @@ export default {
   display: flex;
   gap: 11px;
   flex-wrap: wrap;
+  @media (max-width: 1000px) {
+    justify-content: center;
+  }
 }
 
 .image__inner-top {
   display: flex;
   align-items: flex-end;
   gap: 15px;
+  @media (max-width: 620px) {
+    padding-left: 10px;
+  }
   span {
     color: #ccc;
     margin-bottom: 2px;

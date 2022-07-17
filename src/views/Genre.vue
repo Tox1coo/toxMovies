@@ -1,15 +1,17 @@
 <template>
-  <div class="genre">
+  <div v-if="isLoading" class="genre">
     <h2 class="title title--page">
       {{ getTitle }}
     </h2>
     <div class="genre__inner">
-      <CategoryItem
-        v-for="categoryItem in lists.results"
-        :key="categoryItem.id"
-        :categoryItem="categoryItem"
-        :media="$route.params.media"
-      ></CategoryItem>
+      <transition-group name="listAnim">
+        <CategoryItem
+          v-for="categoryItem in lists.results"
+          :key="categoryItem.id"
+          :categoryItem="categoryItem"
+          :media="$route.params.media"
+        ></CategoryItem>
+      </transition-group>
     </div>
     <div
       v-if="lists?.results?.length > 0"
@@ -35,6 +37,7 @@ export default {
       totalPage: 0,
       genre: {},
       lists: {},
+      isLoading: false,
     };
   },
   directives: {
@@ -67,6 +70,8 @@ export default {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      this.isLoading = true;
     }
   },
   methods: {
@@ -98,6 +103,22 @@ export default {
     flex-wrap: wrap;
     gap: 25px;
     padding-top: 20px;
+    @media (max-width: 1120px) {
+      justify-content: center;
+    }
   }
+  @media (max-width: 750px) {
+    padding-left: 10px;
+  }
+}
+
+.listAnim-active,
+.listAnim-leave-active {
+  transition: all 1s ease;
+}
+.listAnim-enter-from,
+.listAnim-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>

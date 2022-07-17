@@ -1,7 +1,7 @@
 <template>
   <nav class="nav">
     <ul class="nav__list">
-      <li class="nav__list-item">
+      <li class="nav__list-item logo">
         <img
           width="75"
           height="36"
@@ -10,7 +10,10 @@
         />
       </li>
       <li class="nav__list-item">
-        <router-link class="nav__list-btn" to="/"
+        <router-link
+          class="nav__list-btn"
+          to="/"
+          :class="{ 'active-btn': $route.path === '/' }"
           ><svg
             version="1.1"
             width="32px"
@@ -41,7 +44,11 @@
         </router-link>
       </li>
       <li class="nav__list-item">
-        <router-link class="nav__list-btn" to="/movie">
+        <router-link
+          class="nav__list-btn"
+          :class="{ 'active-btn': $route.path.includes('movie') }"
+          to="/movie"
+        >
           <svg
             version="1.1"
             id="Capa"
@@ -112,7 +119,13 @@
         </router-link>
       </li>
       <li class="nav__list-item">
-        <router-link class="nav__list-btn" to="/tvshows"
+        <router-link
+          class="nav__list-btn"
+          :class="{
+            'active-btn':
+              $route.path.includes('tvshows') || $route.path.includes('tv'),
+          }"
+          to="/tvshows"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="32px"
@@ -138,7 +151,13 @@
         </router-link>
       </li>
       <li class="nav__list-item">
-        <button @click="updateShowSearch(true)" class="nav__list-btn">
+        <button
+          :class="{
+            'active-btn': $route.path.includes('search'),
+          }"
+          @click="updateShowSearch(true)"
+          class="nav__list-btn"
+        >
           <svg
             version="1.1"
             id="Capa_1"
@@ -176,17 +195,19 @@ export default {
 
 <style lang="scss" scoped>
 .nav {
-  min-height: 100%;
+  height: 100%;
   width: 120px;
   position: fixed;
   left: 0;
-  top: 0;
   z-index: 1000;
   background-color: $navbar-bgcolor;
   border-right: 1px solid rgba(#ccc, 0.2);
   &__list {
     padding-top: 25px;
+    min-height: 100%;
+
     &-btn {
+      border: none;
       background: none;
       cursor: pointer;
       &:hover {
@@ -206,10 +227,38 @@ export default {
     }
 
     display: flex;
-    gap: 50px;
     list-style: none;
+    gap: 50px;
     flex-direction: column;
     align-items: center;
+    @media (max-width: 1200px) {
+      flex-direction: row;
+      width: 100%;
+      padding: 0 100px 0;
+      gap: 0;
+      justify-content: center;
+      padding-top: 0;
+      &-item {
+        flex: 1 1 auto;
+      }
+      &-item:last-child {
+        flex: 0;
+      }
+    }
+    @media (max-width: 400px) {
+      padding: 0 50px 0;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 60px;
+    min-height: 60px;
+    width: 100%;
+    z-index: 999;
+    bottom: 0;
   }
 }
 path {
@@ -223,5 +272,24 @@ g {
   transition: all 0.3s ease;
   opacity: 0;
   transform: translate(0, -10%);
+}
+.logo {
+  @media (max-width: 1200px) {
+    display: none;
+  }
+}
+.active-btn {
+  & .movie g path {
+    fill: red;
+  }
+  & .home g path {
+    fill: red;
+  }
+  & .tv g {
+    stroke: red;
+  }
+  & .search path {
+    fill: red;
+  }
 }
 </style>

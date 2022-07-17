@@ -76,7 +76,22 @@ export default {
   width: 100%;
   justify-content: center;
   gap: 50px;
-
+  @media (max-width: 520px) {
+    & &__item {
+      font-size: 17px;
+    }
+  }
+  @media (max-width: 520px) {
+    gap: 20px;
+  }
+  @media (max-width: 375px) {
+    & &__item {
+      font-size: 15px;
+      margin-top: 15px;
+    }
+    gap: 10px;
+    flex-wrap: wrap;
+  }
   &__item {
     text-transform: uppercase;
     cursor: pointer;

@@ -17,11 +17,8 @@
               :vote_count="currentItem?.vote_count"
             ></Star>
             <div class="rating__info">
-              <span v-if="currentItem?.vote_count !== 0"
-                >{{ currentItem?.vote_count }} Отзывов</span
-              >
               <span v-if="currentItem?.seasons != undefined">
-                Cезонов {{ currentItem?.last_episode_to_air?.season_number }}
+                Seasons {{ currentItem?.last_episode_to_air?.season_number }},
               </span>
               <span
                 v-if="
@@ -29,7 +26,6 @@
                   currentItem?.release_date != ''
                 "
               >
-                - c
                 {{
                   new Date(currentItem?.first_air_date).getFullYear() ||
                   new Date(currentItem?.release_date).getFullYear()
@@ -42,10 +38,10 @@
             </div>
           </div>
         </div>
-        <div class="overwiew">
+        <div class="backdrop__overview">
           <p class="text">{{ currentItem?.overview }}</p>
         </div>
-        <TrailerButton></TrailerButton>
+        <TrailerButton class="trailer"></TrailerButton>
       </div>
       <div v-if="getImage != ''" class="backdrop__right">
         <img class="backdrop__right-img lazyloading" :src="getImage" />
@@ -143,9 +139,24 @@ export default {
   border-bottom: 1px solid rgba(#ccc, 0.2);
   position: relative;
   z-index: 1000;
+  &__overview {
+    @media (max-width: 600px) {
+      display: none;
+    }
+  }
+  @media (max-width: 650px) {
+    height: 500px;
+  }
+  @media (max-width: 400px) {
+    height: 400px;
+  }
   &__inner {
     display: flex;
+    height: 100%;
     position: relative;
+    @media (max-width: 1050px) {
+      flex-direction: column;
+    }
   }
 
   &__left {
@@ -155,6 +166,23 @@ export default {
     padding-top: 150px;
     padding-left: 50px;
     animation: loading 0.7s ease-in-out;
+    @media (max-width: 1050px) {
+      position: absolute;
+      bottom: 70px;
+      width: 98%;
+
+      padding-top: 0;
+    }
+    @media (max-width: 800px) {
+      position: relative;
+      order: 2;
+    }
+    @media (max-width: 500px) {
+      padding-left: 20px;
+    }
+    @media (max-width: 500px) {
+      bottom: 30px;
+    }
   }
 
   &__right {
@@ -163,9 +191,17 @@ export default {
     top: 0;
     display: block;
     width: 71.1%;
-    height: 599px;
+    height: calc(100% - 1px);
+    @media (max-width: 1050px) {
+      position: relative;
+      width: 100%;
+    }
+    @media (max-width: 800px) {
+      order: 1;
+    }
     &-img {
-      height: 599px;
+      height: calc(100% - 1px);
+
       width: 100%;
       position: relative;
       &::before {
@@ -176,14 +212,15 @@ export default {
         height: 64px;
         width: 64px;
         left: 50%;
-        z-index: 1000;
+        z-index: 831;
         transform: translate(-50%, -50%);
         background-image: url("../assets/error.png");
       }
     }
     &::after {
       content: "";
-      height: 599px;
+      height: 100%;
+
       position: absolute;
       display: block;
       z-index: 100;
@@ -195,6 +232,14 @@ export default {
         transparent 70%,
         transparent
       );
+      @media (max-width: 1050px) {
+        background-image: linear-gradient(
+          360deg,
+          #000 0,
+          transparent 100%,
+          transparent
+        );
+      }
     }
   }
 }
@@ -209,11 +254,16 @@ export default {
     font-size: 15px;
     line-height: 0.75;
     color: #999;
+    @media (max-width: 550px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
   }
 
   &__info {
     font-size: 17px;
-
+    line-height: 1.2;
     span {
       margin-right: 5px;
     }
@@ -231,3 +281,4 @@ export default {
   }
 }
 </style>
+

@@ -1,5 +1,5 @@
 <template>
-  <div class="person">
+  <div v-if="isLoading" class="person">
     <div class="person__inner">
       <div class="person__img">
         <img
@@ -34,7 +34,7 @@
     ></KnowForPerson>
   </div>
 </template>
-
+<!-- TODO: Доделать адаптив! -->
 <script>
 import { mapState } from "vuex";
 import PersonOverview from "@/components/homePage/PageType/Person/PersonOverview.vue";
@@ -76,6 +76,7 @@ export default {
           id: 2,
         },
       ],
+      isLoading: false,
     };
   },
   methods: {
@@ -85,7 +86,14 @@ export default {
     },
   },
   async created() {
-    this.personInfo = await getPersonInfo(this.$route.params.id);
+    try {
+      this.personInfo = await getPersonInfo(this.$route.params.id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log(this.personInfo);
+      this.isLoading = true;
+    }
   },
   components: {
     PersonOverview,

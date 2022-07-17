@@ -66,6 +66,12 @@ export default {
       display: flex;
       flex-wrap: wrap;
       gap: 27px;
+      @media (max-width: 900px) {
+        justify-content: center;
+      }
+    }
+    @media (max-width: 650px) {
+      padding: 30px 0 50px;
     }
   }
 }

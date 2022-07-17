@@ -2,7 +2,9 @@
 .title {
 	color: $main-color;
 	font-size: 40px;
-
+  @media (max-width: 400px) {
+    font-size: 28px;
+  }
   &--slider {
     font-size: 14px;
     margin-top: 10px;
@@ -13,6 +15,12 @@
   &--page {
     font-size: 33px;
     margin-bottom: 10px;
+    @media (max-width: 510px) {
+      font-size: 28px;
+    }
+        @media (max-width: 400px) {
+      font-size: 23px;
+    }
   }
 
   &--image {
@@ -32,6 +40,9 @@
     margin-top: 10px;
     font-size: 13px;
   }
+      @media (max-width: 510px) {
+      font-size: 18px;
+    }
 }
 
 .text {
@@ -77,6 +88,10 @@ html {
 body {
   height: 100%;
   padding-left: 120px;
+
+  @media (max-width:1200px) {
+  padding-left: 0;
+  }
 }
 
 .loading__home {
@@ -90,4 +105,14 @@ body {
   top: 50%;
   left: 50%;
   margin-bottom: 25px;
+  @media (max-width:500px) {
+    left: 40%;
+    width: 64px;
+    height: 64px;
+  }
 }
+
+.observer {
+  height: 10px;
+}
+

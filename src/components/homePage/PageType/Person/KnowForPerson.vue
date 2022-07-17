@@ -1,5 +1,5 @@
 <template>
-  <div class="knowfor">
+  <div v-if="knowforPerson.length > 0" class="knowfor">
     <div class="knowfor__inner">
       <CategoryItem
         v-for="knowforPersonItem in knowforPerson"

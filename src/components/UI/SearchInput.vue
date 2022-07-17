@@ -1,20 +1,22 @@
 <template>
-  <div
-    v-if="showSearch"
-    @click.stop="updateShowSearch(false)"
-    class="search__modal"
-  >
-    <div @click.stop class="search__modal-inner">
-      <input
-        v-focus
-        class="search__modal-input"
-        type="text"
-        placeholder="Search for Movies, TV Shows and Person"
-        @input="$emit('search', $event.target.value)"
-      />
-      <span @click="updateShowSearch(false)" class="close"></span>
+  <transition name="search">
+    <div
+      v-if="showSearch"
+      @click.stop="updateShowSearch(false)"
+      class="search__modal"
+    >
+      <div @click.stop class="search__modal-inner">
+        <input
+          v-focus
+          class="search__modal-input"
+          type="text"
+          placeholder="Search for Movies, TV Shows and Person"
+          @input="$emit('search', $event.target.value)"
+        />
+        <span @click="updateShowSearch(false)" class="close"></span>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -54,13 +56,21 @@ export default {
     margin-left: 120px;
     position: relative;
     height: 60px;
+    @media (max-width: 1200px) {
+      width: 100%;
+      margin-left: 0;
+      height: 80px;
+      & input {
+        font-size: 18px;
+      }
+    }
   }
   &-input {
     border: none;
     background-color: #202124;
     color: #fff;
     width: 100%;
-    height: 60px;
+    height: 100%;
     padding: 10px 10px 10px 15px;
     &:focus {
       outline: none;
@@ -102,5 +112,22 @@ export default {
     background-color: #fff;
     transform: rotate(45deg);
   }
+}
+
+.search-enter-active {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: all 0.7s ease 0s;
+}
+.search-leave-active {
+  transition: all 0.5s ease 0s;
+}
+.search-enter-to {
+  opacity: 1;
+  transform: translateX(0px);
+}
+.search-leave-to {
+  opacity: 0;
+  transform: translateY(-50px);
 }
 </style>

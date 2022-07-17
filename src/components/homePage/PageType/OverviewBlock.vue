@@ -251,9 +251,7 @@ export default {
       default: () => [],
     },
   },
-  mounted() {
-    console.log(this.$route);
-  },
+
   computed: {
     ...mapState({
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
@@ -269,12 +267,14 @@ export default {
     display: flex;
     padding: 50px;
     padding-top: 30px;
+
     &-poster {
-      min-width: 342px;
+      min-width: 290px;
       border: 1px solid rgba(#999, 0.2);
       animation: anim-poster 2s cubic-bezier(0.14, 0.47, 0.2, 1.15);
       position: relative;
       img {
+        width: 100%;
         position: relative;
         z-index: 3;
       }
@@ -291,6 +291,25 @@ export default {
         background-image: url("../../../assets/error.png");
         background-repeat: no-repeat;
       }
+      @media (max-width: 850px) {
+        max-width: 500px;
+        margin-bottom: 15px;
+      }
+    }
+    @media (max-width: 850px) {
+      margin-bottom: 15px;
+      align-items: center;
+
+      flex-direction: column;
+    }
+    @media (max-width: 650px) {
+      align-items: center;
+    }
+    @media (max-width: 400px) {
+      padding: 30px 10px 50px 10px;
+    }
+    @media (max-width: 465px) {
+      padding: 30px 10px 20px 10px;
     }
   }
   &__link {
@@ -307,6 +326,9 @@ export default {
   }
   &__list {
     animation: anim-list 2s cubic-bezier(0.14, 0.47, 0.2, 1.15);
+  }
+  @media (max-width: 650px) {
+    margin-left: 0;
   }
 }
 .list-link {
@@ -329,14 +351,28 @@ ul {
   flex-direction: column;
   gap: 5px;
   font-size: 18px;
+  @media (max-width: 510px) {
+    font-size: 15px;
+  }
   li {
     display: flex;
     div:first-child {
       max-width: fit-content;
       min-width: 180px;
+      @media (max-width: 425px) {
+        max-width: 100px;
+
+        min-width: 100px;
+      }
+      @media (max-width: 340px) {
+        max-width: 80px;
+        min-width: 80px;
+      }
     }
     div:last-child {
-      width: 500px;
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
     }
   }
 }

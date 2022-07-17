@@ -48,6 +48,10 @@ export default {
     transition: transform 0.4s ease 0s;
     min-width: 320px;
     max-height: 180px;
+    @media (max-width: 380px) {
+      max-height: 150px;
+      min-width: 250px;
+    }
   }
   &::after {
     content: "";
@@ -61,6 +65,12 @@ export default {
     transform: translate(-50%, -100%);
 
     background-image: url("../../../assets/video.png");
+    @media (max-width: 380px) {
+      height: 32px;
+      width: 32px;
+      background-image: url("../../../assets/video-small.png");
+      background-repeat: no-repeat;
+    }
   }
 }
 </style>

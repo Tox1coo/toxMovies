@@ -19,6 +19,7 @@
       :navigation="true"
       :grab-cursor="true"
       @transitionEnd="onSwipe"
+      :breakpoints="breakpoints"
     >
       <swiper-slide
         ref="swipeItem"
@@ -58,12 +59,13 @@ import "swiper/swiper.min.css";
 
 // modules styles
 import "swiper/components/navigation/navigation.min.css";
+import "swiper/components/pagination/pagination.min.css";
 
 // import Swiper core and required modules
-import SwiperCore, { Navigation } from "swiper";
+import SwiperCore, { Navigation, Pagination } from "swiper";
 
 // install Swiper modules
-SwiperCore.use([Navigation]);
+SwiperCore.use([Navigation, Pagination]);
 import CategoryItem from "@/components/homePage/Category/CategoryItem.vue";
 export default {
   data() {
@@ -72,6 +74,79 @@ export default {
       currentSlide: 0,
       slidesPerGroup: 0,
       checkLeft: false,
+      breakpoints: {
+        6000: {
+          slidesPerView: 21,
+          slidesPerGroup: 21,
+          spaceBetween: 30,
+          navigation: false,
+        },
+        5000: {
+          slidesPerView: 18.3,
+          slidesPerGroup: 18,
+        },
+        4500: {
+          slidesPerView: 17.3,
+          slidesPerGroup: 17,
+        },
+        4000: {
+          slidesPerView: 15.3,
+          slidesPerGroup: 15,
+        },
+        3500: {
+          slidesPerView: 12.3,
+          slidesPerGroup: 12,
+        },
+        2700: {
+          slidesPerView: 10.3,
+          slidesPerGroup: 10,
+        },
+        2400: {
+          slidesPerView: 9.3,
+          slidesPerGroup: 9,
+        },
+        2100: {
+          slidesPerView: 8.3,
+          slidesPerGroup: 8,
+        },
+        1900: {
+          slidesPerView: 7.3,
+          slidesPerGroup: 7,
+        },
+        1800: {
+          slidesPerView: 6.3,
+          slidesPerGroup: 7,
+        },
+        1450: {
+          slidesPerView: 5.3,
+          slidesPerGroup: 5,
+        },
+
+        1050: {
+          slidesPerView: 4.3,
+          slidesPerGroup: 4,
+          spaceBetween: 10,
+        },
+
+        800: {
+          slidesPerView: 3.3,
+          slidesPerGroup: 3,
+          spaceBetween: 20,
+          pagination: true,
+        },
+        550: {
+          slidesPerView: 2.3,
+          slidesPerGroup: 2,
+          spaceBetween: 10,
+          pagination: true,
+        },
+        320: {
+          slidesPerView: 1,
+          slidesPerGroup: 1,
+          spaceBetween: 50,
+          pagination: true,
+        },
+      },
     };
   },
   props: {
@@ -169,6 +244,16 @@ export default {
         color: #5b68ff;
       }
     }
+    @media (max-width: 500px) {
+      justify-content: space-between;
+      h2 {
+        font-size: 15px;
+      }
+      a {
+        font-size: 14px;
+        margin-bottom: 0;
+      }
+    }
   }
 }
 .swiper {
@@ -183,6 +268,9 @@ export default {
     transition: all 0.2s ease 0s;
     width: 52px !important;
     background-color: rgba($color: #000000, $alpha: 0.5);
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   &-button-next {

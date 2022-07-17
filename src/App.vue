@@ -46,6 +46,9 @@ export default {
   padding-bottom: 50px;
   display: flex;
   flex-direction: column;
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
 }
 
 *,

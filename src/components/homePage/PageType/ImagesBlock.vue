@@ -35,5 +35,8 @@ export default {
     flex-direction: column;
     gap: 30px;
   }
+  @media (max-width: 650px) {
+    padding: 30px 0 50px;
+  }
 }
 </style>

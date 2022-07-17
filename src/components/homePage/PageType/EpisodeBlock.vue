@@ -31,6 +31,9 @@ export default {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+    @media (max-width: 1450px) {
+      justify-content: center;
+    }
   }
 }
 
@@ -59,6 +62,9 @@ export default {
     &::before {
       border-color: #ccc;
     }
+  }
+  @media (max-width: 630px) {
+    padding-left: 10px;
   }
 }
 </style>

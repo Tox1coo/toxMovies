@@ -121,7 +121,7 @@ export default {
     },
   },
 
-  async created() {
+  async mounted() {
     this.getItem();
   },
   updated() {
