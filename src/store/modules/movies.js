@@ -10,5 +10,11 @@ export const movies = {
 			showTrailer: false,
 		}
 	},
+
+	mutations: {
+		isShowTrailer(state, showTrailer) {
+			state.showTrailer = showTrailer;
+		}
+	},
 	namespaced: true
 }
