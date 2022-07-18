@@ -1,5 +1,7 @@
-<template>
+<template functionality>
   <div v-if="isLoading" class="genre">
+    <Back class="back--genre"></Back>
+
     <h2 class="title title--page">
       {{ getTitle }}
     </h2>

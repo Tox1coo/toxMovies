@@ -78,7 +78,6 @@ export default {
   },
   methods: {
     getLink() {
-      console.log(this.media);
       if (this.categoryItem?.gender === undefined) {
         this.$router.push(`/${this.media}/${this.categoryItem.id}`);
       } else {

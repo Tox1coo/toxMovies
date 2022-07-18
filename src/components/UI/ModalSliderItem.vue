@@ -1,6 +1,8 @@
 <template>
+  <Loading v-if="trailerKey == undefined"></Loading>
+
   <iframe
-    v-if="
+    v-else-if="
       (trailerKey != '' || trailerKey != null || trailerKey != undefined) &&
       typeModal === 'video'
     "
@@ -21,7 +23,6 @@
     class="image__slider"
     alt=""
   />
-  <Loading v-else></Loading>
 </template>
 
 <script>
@@ -51,6 +52,10 @@ iframe {
 
 .image__slider {
   height: 100%;
+  @media (max-width: 1200px) {
+    height: 50vh;
+    max-width: 80vw;
+  }
   max-width: 100%;
   background-color: rgba(#999, 0.3);
 }

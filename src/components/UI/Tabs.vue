@@ -59,7 +59,6 @@ export default {
           if (+tab.getAttribute("data-index") < this.prevId.id) {
             tab.classList.remove("active--anim");
           } else {
-            console.log(tab);
             tab.classList.remove("active--anim");
             tab.classList.remove("active");
           }

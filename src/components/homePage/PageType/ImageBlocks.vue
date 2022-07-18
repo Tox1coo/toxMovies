@@ -1,4 +1,4 @@
-<template >
+<template functionality>
   <div class="image__inner-top">
     <h2 class="title title--image">{{ titleBlock.toUpperCase() }}</h2>
     <span>{{ imageList.length }} фото</span>

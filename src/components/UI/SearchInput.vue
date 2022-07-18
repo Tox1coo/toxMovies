@@ -62,6 +62,9 @@ export default {
       height: 80px;
       & input {
         font-size: 18px;
+        @media (max-width: 510px) {
+          font-size: 13px;
+        }
       }
     }
   }
@@ -94,23 +97,24 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
     width: 18px;
     height: 2px;
     background-color: #fff;
-    transform: rotate(-45deg);
+    transform: translate(-50%, -50%) rotate(-45deg);
   }
   &::before {
     content: "";
     display: block;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
     position: absolute;
     width: 18px;
     height: 2px;
     background-color: #fff;
-    transform: rotate(45deg);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  @media (max-width: 510px) {
+    right: 20px;
   }
 }
 

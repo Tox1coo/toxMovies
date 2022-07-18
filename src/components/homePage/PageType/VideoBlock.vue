@@ -1,4 +1,4 @@
-<template>
+<template functionality>
   <div class="video">
     <div class="video__top">
       <DropList v-model:sortedItem="sortedItem" :list="sorted"></DropList>

@@ -1,5 +1,7 @@
-<template>
+<template functionality>
   <div class="category">
+    <Back class="back--category"></Back>
+
     <h2>{{ getTitle }}</h2>
     <div class="category__inner">
       <transition-group name="listAnim">
@@ -48,7 +50,6 @@ export default {
       return getLists(this.media, this.type).title;
     },
   },
-  /* Продумать как лучше сделать загрузку данных */
   async mounted() {
     try {
       if (this.type === "trending") {
@@ -66,13 +67,11 @@ export default {
     } catch (error) {
       console.log(error);
     }
-    /* TODO: сделать проверку есть ли запись в массиве или нет, чтобы не загружались одни и те же позиции!! */
   },
 
   methods: {
     loadMore() {
       this.isLoading = true;
-      console.log(this.isLoading);
       if (this.type === "trending") {
         getTrending(this.media, ++this.page)
           .then((response) => {
@@ -135,6 +134,9 @@ export default {
     @media (max-width: 1120px) {
       justify-content: center;
     }
+  }
+  & .loading {
+    transform: translate(-40%, 5px);
   }
 }
 

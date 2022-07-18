@@ -30,7 +30,6 @@
   </div>
   <Loading class="loading__home" v-else></Loading>
 </template>
-<!-- TODO: переделать передачу парамаетров для слайдера с типами и тд -->
 <script>
 /* eslint-disable-next-line no-unused-vars */
 import BackDropBlock from "@/components/BackDropBlock.vue";

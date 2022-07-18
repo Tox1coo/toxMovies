@@ -138,7 +138,7 @@ export default {
   background-color: $navbar-bgcolor;
   border-bottom: 1px solid rgba(#ccc, 0.2);
   position: relative;
-  z-index: 1000;
+  z-index: 998;
   &__overview {
     @media (max-width: 600px) {
       display: none;

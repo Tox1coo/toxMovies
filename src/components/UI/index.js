@@ -9,6 +9,8 @@ import ModalSlider from '@/components/UI/ModalSlider';
 import ModalSliderItem from '@/components/UI/ModalSliderItem';
 import Loading from '@/components/UI/Loading';
 import SearchInput from '@/components/UI/SearchInput';
+import Back from '@/components/UI/Back';
+
 
 export default [
 	NavBar,
@@ -21,5 +23,6 @@ export default [
 	ModalSlider,
 	ModalSliderItem,
 	Loading,
+	Back,
 	SearchInput,
 ]

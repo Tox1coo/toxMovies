@@ -16,10 +16,8 @@ export default {
   methods: {
     ...mapMutations({
       updateSearch: "search/updateSearch",
-      setIsLoading: "movies/setIsLoading",
     }),
     searchMulti(item) {
-      console.log(this.$route.path);
       if (!this.$route.path.includes("search") && item.length > 0) {
         this.$router.push("/search");
         this.updateSearch(item);
@@ -29,10 +27,6 @@ export default {
         this.$router.go(-1);
       }
     },
-  },
-
-  async created() {
-    this.setIsLoading(true);
   },
 };
 </script>

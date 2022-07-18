@@ -1,5 +1,7 @@
-<template>
+<template functionality>
   <div class="search">
+    <Back class="back--search"></Back>
+
     <div class="search__top">
       <h2 class="title title--page">Result for: {{ search }}</h2>
     </div>

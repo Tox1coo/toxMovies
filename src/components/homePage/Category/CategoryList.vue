@@ -1,4 +1,4 @@
-<template>
+<template functionality>
   <div ref="list" class="category">
     <div class="category__link">
       <h2>
@@ -68,6 +68,7 @@ import SwiperCore, { Navigation, Pagination } from "swiper";
 SwiperCore.use([Navigation, Pagination]);
 import CategoryItem from "@/components/homePage/Category/CategoryItem.vue";
 export default {
+  functional: true,
   data() {
     return {
       viewItemSlide: 0,
@@ -167,12 +168,6 @@ export default {
     document.querySelectorAll(".swiper-button-prev").forEach((element) => {
       element.style.cssText = "opacity: 0 !important; visibility: hidden";
     });
-    /*     const viewItemSlide = this.mediaTypeList.length / 2;
-    this.viewItemSlide = viewItemSlide;
-    this.slidesPerGroup = Math.floor(this.mediaTypeList.length / 2);
-    setTimeout(() => {
-      console.log(this.$refs.swipeItem);
-    }, 500); */
   },
   methods: {
     onSwipe(swipe) {

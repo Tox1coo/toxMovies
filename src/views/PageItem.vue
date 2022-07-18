@@ -1,6 +1,10 @@
 <template>
+  <Back></Back>
+
   <BackDropBlock v-if="isLoading" :infoItem="pageItem"></BackDropBlock>
   <div v-if="isLoading" class="page">
+    <Back class="back--item"></Back>
+
     <div class="page__inner">
       <Tabs
         @setCurrentTab="setCurrentTab"
@@ -148,7 +152,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.back--item {
+  @media (max-width: 690px) {
+    display: none !important;
+  }
+}
 .page {
+  position: relative;
   overflow: hidden;
 }
 .info-enter-active {

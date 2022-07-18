@@ -3,17 +3,6 @@
     <div @click.stop class="video__modal-list">
       <button ref="prev" @click="prevSlide" class="prev"></button>
 
-      <!-- <swiper
-        :slidesPerView="1"
-        :slidesPerGroup="1"
-        :navigation="true"
-        @transitionEnd="onSwipe"
-      >
-        <swiper-slide v-for="modalItem in modalList" :key="modalItem.id">
-          <ModalSliderItem :trailerKey="modalItem.key"></ModalSliderItem>
-        </swiper-slide>
-      </swiper> -->
-
       <ModalSliderItem
         v-if="isLoading"
         :typeModal="typeModal"
@@ -28,27 +17,12 @@
       <div class="video__modal-counter">
         {{ currentIndexModalItem + 1 }} / {{ modalList.length }}
       </div>
+      <div @click="hideDialog" class="close"></div>
     </div>
   </div>
 </template>
 
 <script>
-// import { Swiper, SwiperSlide } from "swiper/vue";
-
-// swiper bundle styles
-import "swiper/swiper-bundle.min.css";
-
-// swiper core styles
-import "swiper/swiper.min.css";
-
-// modules styles
-import "swiper/components/navigation/navigation.min.css";
-
-// import Swiper core and required modules
-import SwiperCore, { Navigation } from "swiper";
-
-// install Swiper modules
-SwiperCore.use([Navigation]);
 import toggleMixins from "@/mixins/toggleMixins";
 export default {
   name: "ModalSlider",
@@ -78,7 +52,6 @@ export default {
       default: "",
     },
   },
-  // components: { Swiper, SwiperSlide },
 
   mixins: [toggleMixins],
   methods: {
@@ -175,10 +148,60 @@ export default {
     border: 1px solid rgba(#999, 0.4);
     justify-content: center;
     align-items: center;
-    width: 1700px;
-    height: 900px;
+    width: 1500px;
+    height: 700px;
     cursor: default;
     display: flex;
+    @media (max-width: 1600px) {
+      .next {
+        border: none;
+        height: 10% !important;
+        bottom: 0;
+        top: 100% !important;
+        left: 60%;
+        transform: translate(-50%, 15%);
+        width: 50px !important;
+      }
+      .prev {
+        left: 40% !important;
+        transform: translate(-40%, -20%);
+      }
+    }
+    @media (max-width: 1200px) {
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      border-radius: 0;
+      background: rgba(0, 0, 0, 1);
+
+      iframe {
+        width: 95vw;
+        height: 85vh;
+      }
+      .close {
+        left: 10px;
+        top: 10px;
+      }
+      .next {
+        height: 5% !important;
+        top: 90% !important;
+        left: 60%;
+        transform: translate(-50%, 60%);
+        width: 50px !important;
+      }
+      .prev {
+        left: 40% !important;
+        transform: translate(-40%, -20%);
+      }
+    }
+    @media (max-width: 720px) {
+      iframe {
+        width: 95vw;
+        height: 70vh;
+      }
+    }
   }
   .next {
     background: rgba($color: #1f1f1f, $alpha: 1);
@@ -227,5 +250,38 @@ export default {
 }
 iframe {
   border-radius: 20px;
+}
+.close {
+  position: absolute;
+  z-index: 100;
+  right: -30px;
+  top: -35px;
+  display: flex;
+  height: 24px;
+  width: 24px;
+  z-index: 1100;
+  cursor: pointer;
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 2px;
+    background-color: #fff;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+  &::before {
+    content: "";
+    display: block;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: #fff;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
 }
 </style>

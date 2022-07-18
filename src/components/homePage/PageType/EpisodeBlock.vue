@@ -1,4 +1,4 @@
-<template>
+<template functionality>
   <div class="episode">
     <button class="back" @click="$emit('backToSeasons', false)">Назад</button>
     <div class="episode__inner">

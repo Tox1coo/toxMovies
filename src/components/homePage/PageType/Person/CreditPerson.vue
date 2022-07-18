@@ -100,9 +100,21 @@ export default {
 
 .credits {
   height: 45px;
+  @media (max-width: 500px) {
+    min-height: 45px;
+    height: fit-content;
+  }
   border-radius: 8px;
   display: flex;
   gap: 50px;
+  @media (max-width: 710px) {
+    gap: 0px;
+  }
+  @media (max-width: 570px) {
+    & .drop {
+      width: 150px;
+    }
+  }
   align-items: center;
   &__year {
     min-width: 70px;
@@ -114,6 +126,16 @@ export default {
     gap: 10px;
     span {
       color: rgba(#fff, 0.8);
+    }
+    @media (max-width: 500px) {
+      gap: 5px;
+      a {
+        width: fit-content;
+        font-size: 15px;
+      }
+      span {
+        font-size: 13px;
+      }
     }
   }
   &__link {
@@ -130,6 +152,11 @@ export default {
       width: 100%;
       height: 1px;
       background-color: #fff;
+    }
+    @media (max-width: 570px) {
+      &::after {
+        display: none;
+      }
     }
     &:hover {
       color: rgba(#fff, 0.8);

@@ -12,7 +12,10 @@
         </li>
         <li>
           <div>Born:</div>
-          <div>{{ person.birthday }} (age {{ getAge }})</div>
+          <div>
+            {{ person.birthday }}
+            <span v-if="person.deathday === ''">(age {{ getAge }})</span>
+          </div>
         </li>
         <li v-if="person?.deathday !== null">
           <div>Died:</div>
@@ -41,11 +44,11 @@ export default {
       return this.person?.name;
     },
     getAge() {
-      return this.person?.deathday == null
+      return this.person?.deathday == ""
         ? new Date().getFullYear() -
             new Date(this.person?.deathday).getFullYear()
         : new Date(this.person?.deathday).getFullYear() -
-            new Date(this.person?.deathday).getFullYear();
+            new Date(this.person?.birthday).getFullYear();
     },
   },
   methods: {
@@ -64,6 +67,9 @@ export default {
 .person__overview {
   &-biography {
     width: 70%;
+    @media (max-width: 1100px) {
+      width: 100%;
+    }
   }
 
   &-list {
@@ -72,6 +78,10 @@ export default {
     flex-direction: column;
     gap: 15px;
     flex-wrap: wrap;
+    @media (max-width: 510px) {
+      font-size: 14px;
+      gap: 10px;
+    }
     li {
       display: flex;
       div {
