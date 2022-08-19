@@ -19,7 +19,6 @@
       ></CategoryList>
     </div>
   </div>
-  <Loading class="loading__home" v-else></Loading>
 </template>
 
 <script>
@@ -27,12 +26,12 @@ import { getMovies, getTVShows, getTrending, getLists } from "@/api";
 
 import BackDropBlockVue from "@/components/BackDropBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "Home",
   components: { BackDropBlockVue, CategoryList },
   data() {
     return {
-      isLoading: false,
       backdropList: [],
       trendingMovies: [],
       trendingTV: [],
@@ -47,12 +46,25 @@ export default {
       this.trendingMovies = await getTrending("movie");
       this.trendingTV = await getTrending("tv");
     } catch (error) {
-      console.log(error);
+      this.$router.push("/notfound");
+      this.updateError("Page not found");
     } finally {
-      this.isLoading = true;
+      this.setIsLoading(true);
     }
   },
+  methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+      updateError: "movies/updateError",
+    }),
+  },
+  beforeUnmount() {
+    this.setIsLoading(false);
+  },
   computed: {
+    ...mapState({
+      isLoading: (state) => state.movies.isLoading,
+    }),
     trendingMoviesTitle() {
       return getLists("movie", "trending").title;
     },

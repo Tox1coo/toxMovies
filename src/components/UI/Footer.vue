@@ -49,6 +49,10 @@ export default {
   padding-top: 50px;
   margin-left: 50px;
   font-size: 14px;
+  flex: 1 1 auto;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
   color: #999;
   a {
     color: #858585;
@@ -67,6 +71,9 @@ export default {
         fill: #c8c8c8;
       }
     }
+  }
+  @media (max-width: 900px) {
+    margin-left: 10px;
   }
 }
 svg {

@@ -2,10 +2,11 @@
   <div v-if="knowforPerson.length > 0" class="knowfor">
     <div class="knowfor__inner">
       <CategoryItem
-        v-for="knowforPersonItem in knowforPerson"
+        v-for="(knowforPersonItem, index) in knowforPerson"
         :key="knowforPersonItem"
         :categoryItem="knowforPersonItem"
         :media="knowforPersonItem.media_type"
+        :indexItem="index"
       ></CategoryItem>
     </div>
   </div>

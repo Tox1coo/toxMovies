@@ -161,7 +161,7 @@ export function getGenreList(media) {
 		}).then((response) => {
 			resolve(response.data)
 		}).catch((error) => {
-			console.log(error);
+			reject(error)
 		})
 	})
 }

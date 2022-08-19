@@ -53,6 +53,9 @@ export default {
       min-width: 250px;
     }
   }
+  @media (max-width: 380px) {
+    max-width: 250px;
+  }
   &::after {
     content: "";
     display: block;

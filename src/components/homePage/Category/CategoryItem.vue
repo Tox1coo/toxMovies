@@ -7,7 +7,7 @@
           (categoryItem?.profile_path != null) | undefined
         "
         class="lazyloading"
-        :src="getImageURL"
+        :src="imageURL"
         alt=""
       />
     </div>
@@ -40,6 +40,7 @@ export default {
     return {
       title: "",
       subtitle: "",
+      imageURL: "",
     };
   },
   props: {
@@ -50,6 +51,10 @@ export default {
     media: {
       type: String,
       default: "",
+    },
+    indexItem: {
+      type: Number,
+      default: 0,
     },
   },
   mounted() {
@@ -74,6 +79,7 @@ export default {
         this.title = this.categoryItem?.name;
         this.subtitle = this.categoryItem?.character;
       }
+      this.getImageURL();
     }, 700);
   },
   methods: {
@@ -84,16 +90,23 @@ export default {
         this.$router.push(`/person/${this.categoryItem.id}`);
       }
     },
+    getImageURL() {
+      setTimeout(() => {
+        if (
+          this.media === "person" ||
+          this.categoryItem?.gender !== undefined
+        ) {
+          this.imageURL = `${this.IMAGE_URL}/w342${this.categoryItem.profile_path}`;
+        } else {
+          this.imageURL = `${this.IMAGE_URL}/w342${this.categoryItem?.poster_path}`;
+        }
+      }, this.indexItem * 1);
+    },
   },
   computed: {
     ...mapState({
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
     }),
-    getImageURL() {
-      return this.media === "person" || this.categoryItem?.gender !== undefined
-        ? `${this.IMAGE_URL}/w342${this.categoryItem.profile_path}`
-        : `${this.IMAGE_URL}/w342${this.categoryItem?.poster_path}`;
-    },
   },
 };
 </script>
@@ -107,6 +120,9 @@ export default {
   transition: all 0.4s ease 0s;
   min-height: 450px;
   overflow: hidden;
+  @media (max-width: 554px) {
+    min-height: 300px;
+  }
   &-img {
     background-color: #202124;
     position: relative;

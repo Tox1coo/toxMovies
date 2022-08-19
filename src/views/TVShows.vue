@@ -35,7 +35,7 @@
 import BackDropBlock from "@/components/BackDropBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 import { getTVShows, getLists } from "@/api";
-
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "TVShows",
   components: {
@@ -44,14 +44,15 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       popularList: [],
       topRatedList: [],
       onTheAirList: [],
       airingTodayList: [],
     };
   },
-
+  beforeUnmount() {
+    this.setIsLoading(false);
+  },
   async mounted() {
     try {
       this.popularList = await getTVShows("popular");
@@ -59,12 +60,16 @@ export default {
       this.onTheAirList = await getTVShows("on_the_air");
       this.airingTodayList = await getTVShows("airing_today");
     } catch (error) {
-      console.log(error);
+      this.$router.push("/notfound");
+      this.updateError("Page not found");
     } finally {
-      this.isLoading = true;
+      this.setIsLoading(true);
     }
   },
   computed: {
+    ...mapState({
+      isLoading: (state) => state.movies.isLoading,
+    }),
     getTitlePopular() {
       return getLists("tv", "popular").title;
     },
@@ -77,6 +82,12 @@ export default {
     getTitleAiringTodayList() {
       return getLists("tv", "airing_today").title;
     },
+  },
+  methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+      updateError: "movies/updateError",
+    }),
   },
 };
 </script>

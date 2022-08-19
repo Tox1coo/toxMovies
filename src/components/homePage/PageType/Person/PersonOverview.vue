@@ -12,10 +12,11 @@
         </li>
         <li>
           <div>Born:</div>
-          <div>
+          <div v-if="person.birthday">
             {{ person.birthday }}
             <span v-if="person.deathday === ''">(age {{ getAge }})</span>
           </div>
+          <div v-else>—</div>
         </li>
         <li v-if="person?.deathday !== null">
           <div>Died:</div>
@@ -23,7 +24,8 @@
         </li>
         <li>
           <div>Place of born:</div>
-          <div>{{ person.place_of_birth }}</div>
+          <div v-if="person.place_of_birth">{{ person.place_of_birth }}</div>
+          <div v-else>—</div>
         </li>
       </ul>
     </div>

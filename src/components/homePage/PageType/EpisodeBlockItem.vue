@@ -26,7 +26,10 @@
           :vote_count="episode.vote_count"
           :vote_average="episode.vote_average"
         ></Star>
-        <p class="text text--episode">{{ episode.runtime }} min</p>
+        <p class="text text--episode" v-if="episode.runtime">
+          {{ episode.runtime }} min
+        </p>
+        <p class="text text--episode" v-else>min —</p>
       </div>
     </div>
   </div>
@@ -74,11 +77,12 @@ export default {
     }
   }
   &-img {
-    & img {
+    min-height: 200px;
+
+    img {
       max-width: 400px;
       min-width: 400px;
 
-      min-height: 300px;
       position: relative;
       z-index: 5;
       @media (max-width: 420px) {
@@ -90,13 +94,12 @@ export default {
     &::before {
       content: "";
       position: absolute;
-      display: flex;
       top: 50%;
       height: 64px;
       width: 64px;
       left: 50%;
       z-index: 2;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -150%);
       background-image: url("../../../assets/error.png");
     }
   }

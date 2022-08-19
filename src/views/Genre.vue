@@ -20,14 +20,13 @@
       v-intersection="loadMore"
       class="observer"
     ></div>
-    <Loading v-if="page < totalPage"></Loading>
   </div>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars  */
 import intersection from "@/components/directives/VIntersection";
-
+import { mapMutations, mapState } from "vuex";
 import { getGenreList, getMediaByGenre } from "@/api";
 import CategoryItem from "@/components/homePage/Category/CategoryItem.vue";
 export default {
@@ -39,13 +38,15 @@ export default {
       totalPage: 0,
       genre: {},
       lists: {},
-      isLoading: false,
     };
   },
   directives: {
     intersection,
   },
   computed: {
+    ...mapState({
+      isLoading: (state) => state.movies.isLoading,
+    }),
     getTitle() {
       return `${this.genre[0]?.title}: ${this.genre[0]?.name}`;
     },
@@ -67,16 +68,20 @@ export default {
       if (this.genre) {
         return;
       } else {
-        console.log("page non found"); // переделать на страницу с не найденными жанрами
         throw new Error("Ошибка");
       }
     } catch (error) {
-      console.log(error);
+      this.$router.push("/notfound");
+      this.updateError("Page not found");
     } finally {
-      this.isLoading = true;
+      this.setIsLoading(true);
     }
   },
   methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+      updateError: "movies/updateError",
+    }),
     loadMore() {
       getMediaByGenre(
         this.$route.params.media,
@@ -91,6 +96,9 @@ export default {
           console.log(error);
         });
     },
+  },
+  beforeUnmount() {
+    this.setIsLoading(false);
   },
   components: { CategoryItem },
 };
@@ -111,6 +119,11 @@ export default {
   }
   @media (max-width: 750px) {
     padding-left: 10px;
+  }
+  .title {
+    @media (max-width: 460px) {
+      width: 70%;
+    }
   }
 }
 

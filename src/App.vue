@@ -2,6 +2,7 @@
   <NavBar></NavBar>
   <Footer></Footer>
   <SearchInput @search="searchMulti"></SearchInput>
+  <Loading class="loading__home" v-if="!isLoading"></Loading>
 </template>
 <!-- TODO: Сделать слайдер с коллекциями. Или отдельную вкладку с коллекцией -->
 <script>
@@ -11,6 +12,7 @@ export default {
     ...mapState({
       showSearch: (state) => state.search.showSearch,
       showTrailer: (state) => state.movies.showTrailer,
+      isLoading: (state) => state.movies.isLoading,
     }),
   },
   methods: {

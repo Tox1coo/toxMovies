@@ -35,6 +35,7 @@
 import BackDropBlock from "@/components/BackDropBlock.vue";
 import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 import { getMovies, getLists } from "@/api";
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "Movies",
   components: {
@@ -43,7 +44,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       popularList: [],
       topRatedList: [],
       upComingList: [],
@@ -60,10 +60,16 @@ export default {
     } catch (error) {
       console.log(error);
     } finally {
-      this.isLoading = true;
+      this.setIsLoading(true);
     }
   },
+  beforeUnmount() {
+    this.setIsLoading(false);
+  },
   computed: {
+    ...mapState({
+      isLoading: (state) => state.movies.isLoading,
+    }),
     getTitlePopular() {
       return getLists("movie", "popular").title;
     },
@@ -76,6 +82,11 @@ export default {
     getTitleNow() {
       return getLists("movie", "now_playing").title;
     },
+  },
+  methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+    }),
   },
 };
 </script>

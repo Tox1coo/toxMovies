@@ -7,7 +7,7 @@ import PageItem from "@/views/PageItem.vue";
 import Search from "@/views/Search.vue";
 import Category from "@/views/Category.vue";
 import Genre from "@/views/Genre.vue";
-
+import NotFound from "@/views/NotFound.vue";
 const routes = [
   {
     path: "/",
@@ -45,6 +45,14 @@ const routes = [
   {
     path: "/genre/:id/:media",
     component: Genre,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    component: NotFound
+  },
+  {
+    path: '/notfound',
+    component: NotFound
   }
 ];
 

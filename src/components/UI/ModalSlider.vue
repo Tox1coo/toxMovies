@@ -178,7 +178,7 @@ export default {
 
       iframe {
         width: 95vw;
-        height: 85vh;
+        height: 50vh;
       }
       .close {
         left: 10px;
@@ -199,7 +199,6 @@ export default {
     @media (max-width: 720px) {
       iframe {
         width: 95vw;
-        height: 70vh;
       }
     }
   }

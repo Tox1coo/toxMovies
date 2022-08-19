@@ -2,9 +2,7 @@
   <div class="search">
     <Back class="back--search"></Back>
 
-    <div class="search__top">
-      <h2 class="title title--page">Result for: {{ search }}</h2>
-    </div>
+    <div class="search__top title--page">Result for: {{ search }}</div>
     <div class="search__inner">
       <transition-group name="listAnim">
         <CategoryItem
@@ -14,18 +12,24 @@
           :categoryItem="searchItem"
         ></CategoryItem>
       </transition-group>
+      <div
+        v-if="searchList.length === 0 || searchList.results.length === 0"
+        class="search__empty"
+      >
+        <img :src="require('@/assets/search-not-found.png')" alt="" />
+        <h2 class="title title--page">Search not found</h2>
+      </div>
     </div>
     <div
-      v-if="searchList.results.length > 0 && page < totalPages"
+      v-if="searchList.results?.length > 0 && page < totalPages"
       class="observer"
       v-intersection="loadMore"
     ></div>
-    <Loading v-if="page < totalPages && isLoading"></Loading>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { getSearch } from "@/api";
 import CategoryItem from "@/components/homePage/Category/CategoryItem.vue";
 export default {
@@ -42,19 +46,25 @@ export default {
   computed: {
     ...mapState({
       search: (state) => state.search.search,
+      isLoading: (state) => state.movies.isLoading,
     }),
   },
-
+  mounted() {
+    this.setIsLoading(true);
+  },
   watch: {
     async search(newSearch) {
-      this.isLoading = true;
       this.searchList = await getSearch(newSearch);
       this.totalPages = this.searchList.total_pages;
-      this.isLoading = false;
     },
   },
-
+  beforeUnmount() {
+    this.setIsLoading(false);
+  },
   methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+    }),
     loadMore() {
       try {
         getSearch(this.search, ++this.page)
@@ -84,9 +94,27 @@ export default {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    min-height: 61vh;
+  }
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   &__top {
     margin-bottom: 20px;
+    .title {
+      @media (max-width: 379px) {
+        width: 76%;
+      }
+    }
+    overflow: hidden;
+  }
+  @media (max-width: 900px) {
+    padding-left: 10px;
   }
 }
 

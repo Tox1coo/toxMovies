@@ -23,10 +23,14 @@
     >
       <swiper-slide
         ref="swipeItem"
-        v-for="categoryItem in mediaTypeList"
+        v-for="(categoryItem, index) in mediaTypeList"
         :key="categoryItem.id"
       >
-        <CategoryItem :media="media" :categoryItem="categoryItem"></CategoryItem
+        <CategoryItem
+          :indexItem="index"
+          :media="media"
+          :categoryItem="categoryItem"
+        ></CategoryItem
       ></swiper-slide>
       <swiper-slide>
         <a
@@ -59,13 +63,12 @@ import "swiper/swiper.min.css";
 
 // modules styles
 import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/pagination/pagination.min.css";
 
 // import Swiper core and required modules
-import SwiperCore, { Navigation, Pagination } from "swiper";
+import SwiperCore, { Navigation } from "swiper";
 
 // install Swiper modules
-SwiperCore.use([Navigation, Pagination]);
+SwiperCore.use([Navigation]);
 import CategoryItem from "@/components/homePage/Category/CategoryItem.vue";
 export default {
   functional: true,
@@ -133,19 +136,16 @@ export default {
           slidesPerView: 3.3,
           slidesPerGroup: 3,
           spaceBetween: 20,
-          pagination: true,
         },
         550: {
           slidesPerView: 2.3,
           slidesPerGroup: 2,
           spaceBetween: 10,
-          pagination: true,
         },
         320: {
           slidesPerView: 1,
           slidesPerGroup: 1,
           spaceBetween: 50,
-          pagination: true,
         },
       },
     };
@@ -263,8 +263,8 @@ export default {
     transition: all 0.2s ease 0s;
     width: 52px !important;
     background-color: rgba($color: #000000, $alpha: 0.5);
-    @media (max-width: 768px) {
-      display: none;
+    @media (max-width: 554px) {
+      height: 85% !important;
     }
   }
 

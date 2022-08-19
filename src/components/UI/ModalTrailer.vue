@@ -103,7 +103,7 @@ export default {
     @media (max-width: 720px) {
       iframe {
         width: 95vw;
-        height: 70vh;
+        height: 50vh;
       }
     }
   }

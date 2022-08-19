@@ -9,18 +9,18 @@
     "
     class="image__blocks-item"
   >
-    <img
-      v-if="imageItem != {}"
-      class="image__img"
-      :src="getImageURL"
-      :alt="imageItem.file_path"
-    />
+    <img v-if="imageURL != ''" class="image__img" :src="imageURL" />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
+  data() {
+    return {
+      imageURL: "",
+    };
+  },
   props: {
     imageItem: {
       type: Object,
@@ -31,15 +31,21 @@ export default {
       default: 0,
     },
   },
+  mounted() {
+    this.getImageURL();
+  },
   computed: {
     ...mapState({
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
     }),
-
+  },
+  methods: {
     getImageURL() {
-      return this.imageItem.file_path != null
-        ? `${this.IMAGE_URL}/w500${this.imageItem.file_path}`
-        : "";
+      setTimeout(() => {
+        if (this.imageItem.file_path != null) {
+          this.imageURL = `${this.IMAGE_URL}/w500${this.imageItem.file_path}`;
+        }
+      }, this.indexImage * 10);
     },
   },
 };

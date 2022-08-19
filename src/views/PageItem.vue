@@ -3,8 +3,6 @@
 
   <BackDropBlock v-if="isLoading" :infoItem="pageItem"></BackDropBlock>
   <div v-if="isLoading" class="page">
-    <Back class="back--item"></Back>
-
     <div class="page__inner">
       <Tabs
         @setCurrentTab="setCurrentTab"
@@ -40,7 +38,6 @@
       ></CategoryList>
     </div>
   </div>
-  <Loading class="loading__home" v-else></Loading>
 </template>
 <!-- TODO: проверить правильность выбора трейлера после перехода по ссылке на фильмах и сериалах 'Посмотреть еще' -->
 <script>
@@ -51,6 +48,7 @@ import CategoryList from "@/components/homePage/Category/CategoryList.vue";
 import VideoBlock from "@/components/homePage/PageType/VideoBlock.vue";
 import ImagesBlock from "@/components/homePage/PageType/ImagesBlock.vue";
 import SeasonBlock from "../components/homePage/PageType/SeasonBlock.vue";
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "PageItem",
   data() {
@@ -58,7 +56,6 @@ export default {
       pageItem: {},
       id: this.$route.params.id,
       media: this.$route.params.media,
-      isLoading: false,
       tabsList: [],
       prevTab: {
         title: "Overview",
@@ -80,7 +77,12 @@ export default {
     ImagesBlock,
     SeasonBlock,
   },
+
   methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+      updateError: "movies/updateError",
+    }),
     setCurrentTab(currentTab) {
       this.prevTab = this.currentTab;
       this.currentTab = currentTab;
@@ -110,9 +112,10 @@ export default {
           ];
         }
       } catch (error) {
-        console.log(error);
+        this.$router.push("/notfound");
+        this.updateError("Page not found");
       } finally {
-        this.isLoading = true;
+        this.setIsLoading(true);
       }
     },
 
@@ -124,7 +127,9 @@ export default {
       this.prevTab = this.currentTab;
     },
   },
-
+  beforeUnmount() {
+    this.setIsLoading(false);
+  },
   async mounted() {
     this.getItem();
   },
@@ -132,6 +137,9 @@ export default {
     this.id = this.$route.params.id;
   },
   computed: {
+    ...mapState({
+      isLoading: (state) => state.movies.isLoading,
+    }),
     getDirectoryFilm() {
       return this.pageItem.credits.crew.filter(
         (crewPerson) => crewPerson.job === "Director"

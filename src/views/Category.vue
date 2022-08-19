@@ -18,7 +18,6 @@
       v-intersection="loadMore"
       class="observer"
     ></div>
-    <Loading v-if="page < totalPage && isLoading"></Loading>
   </div>
 </template>
 <!-- TODO: сделать проверку на максимульное количество страниц -->
@@ -28,6 +27,7 @@
 import intersection from "@/components/directives/VIntersection";
 import CategoryItem from "../components/homePage/Category/CategoryItem.vue";
 import { getLists, getMovies, getTVShows, getTrending } from "@/api";
+import { mapMutations } from "vuex";
 export default {
   name: "Category",
   data() {
@@ -36,8 +36,6 @@ export default {
       type: this.$route.params.type,
       categoryList: [],
       page: 1,
-      isLoading: false,
-      isLoadingMore: false,
       totalPage: 0,
     };
   },
@@ -47,7 +45,7 @@ export default {
 
   computed: {
     getTitle() {
-      return getLists(this.media, this.type).title;
+      return getLists(this.media, this.type)?.title;
     },
   },
   async mounted() {
@@ -59,59 +57,52 @@ export default {
         if (this.media === "movie") {
           this.categoryList = await getMovies(this.type);
           this.totalPage = this.categoryList.total_pages;
-        } else {
+        } else if (this.media === "tv") {
           this.categoryList = await getTVShows(this.type);
           this.totalPage = this.categoryList.total_pages;
         }
       }
     } catch (error) {
-      console.log(error);
+      this.$router.push("/notfound");
+      this.updateError("Page not found");
+    } finally {
+      this.setIsLoading(true);
     }
   },
-
+  beforeUnmount() {
+    this.setIsLoading(false);
+  },
   methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+      updateError: "movies/updateError",
+    }),
     loadMore() {
-      this.isLoading = true;
       if (this.type === "trending") {
-        getTrending(this.media, ++this.page)
-          .then((response) => {
+        getTrending(this.media, ++this.page).then((response) => {
+          this.categoryList.results = [
+            ...this.categoryList.results,
+            ...response.results,
+          ];
+          this.page = response.page;
+        });
+      } else {
+        if (this.media === "movie") {
+          getMovies(this.type, ++this.page).then((response) => {
             this.categoryList.results = [
               ...this.categoryList.results,
               ...response.results,
             ];
             this.page = response.page;
-            this.isLoading = false;
-          })
-          .catch((error) => {
-            this.isLoading = false;
           });
-      } else {
-        if (this.media === "movie") {
-          getMovies(this.type, ++this.page)
-            .then((response) => {
-              this.categoryList.results = [
-                ...this.categoryList.results,
-                ...response.results,
-              ];
-              this.page = response.page;
-              this.isLoading = false;
-            })
-            .catch((error) => {
-              this.isLoading = false;
-            });
         } else {
-          getTVShows(this.type, ++this.page)
-            .then((response) => {
-              this.categoryList.results = [
-                ...this.categoryList.results,
-                ...response.results,
-              ];
-              this.page = response.page;
-              this.isLoading = false;
-            })
-            .catch((error) => {
-              this.isLoading = false;
-            });
+          getTVShows(this.type, ++this.page).then((response) => {
+            this.categoryList.results = [
+              ...this.categoryList.results,
+              ...response.results,
+            ];
+            this.page = response.page;
+          });
         }
       }
     },
@@ -137,6 +128,12 @@ export default {
   }
   & .loading {
     transform: translate(-40%, 5px);
+  }
+  @media (max-width: 379px) {
+    h2 {
+      font-size: 21px;
+      width: 70%;
+    }
   }
 }
 

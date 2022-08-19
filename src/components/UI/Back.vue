@@ -10,7 +10,7 @@ export default {
 
 <style lang="scss" scoped>
 .back {
-  color: #999;
+  color: #dadada;
   font-size: 18px;
   position: absolute;
   z-index: 999;
@@ -23,28 +23,36 @@ export default {
     display: inline-block;
     width: 13px;
     height: 13px;
-    border-left: 1px solid #999;
-    border-top: 1px solid #999;
+    border-left: 1px solid #dadada;
+    border-top: 1px solid #dadada;
     margin-right: 5px;
     transform: rotate(310deg);
   }
-  @media (max-width: 900px) {
+  @media (max-width: 1024px) {
     display: block;
   }
   &--search {
+    display: block;
+    top: 35px !important;
     right: 20px;
-    top: 45px !important;
-    left: 90% !important;
+    left: auto;
   }
   &--category {
-    right: 20px;
+    display: block;
+    right: 0;
+    left: auto;
     top: 35px !important;
-    left: 88% !important;
+    @media (max-width: 365px) {
+      right: -15px;
+    }
   }
   &--genre {
+    display: block;
     right: 20px;
     top: 60px !important;
-    left: 90% !important;
+    left: auto;
+  }
+  &--item {
   }
 }
 </style>

@@ -15,61 +15,37 @@ export default {
 
 <style lang="scss" scoped>
 .loading {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  left: 40%;
-  transform: translateX(-20%);
-  width: 200px;
-  height: 200px;
-  @media (min-width: 770px) {
-    transform: translate(-40%, -100px);
-  }
-  @media (min-width: 450px) {
-    transform: translate(-40%, -100px);
-  }
-  @media (max-width: 450px) and (min-width: 320px) {
-    transform: translate(-60%, -100px);
-  }
-
-  @media (min-width: 1280px) {
-    transform: translate(-20%, -100px);
-  }
-  @media (min-width: 1800px) {
-    transform: translate(0%, -0px);
-  }
-
-  @media (min-width: 2200px) {
-    transform: translate(30%, 200px);
-  }
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
 
   &__inner {
     width: 100%;
     height: 100%;
     position: relative;
-  }
-  &__item {
-    right: 0;
-    position: absolute;
-
-    &:first-child {
-      top: 14px;
-      left: 150px;
-      animation: loading-first 3s cubic-bezier(0.14, 0.47, 0.2, 1.15) infinite;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      border: 1px solid #0000ff;
-    }
-    &:last-child {
-      animation: loading-last 1.5s cubic-bezier(0.14, 0.47, 0.2, 1.15) infinite;
+    &::before {
       position: absolute;
-      width: 65px;
-      height: 65px;
-
+      content: "";
+      display: block;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: loading-first 3s cubic-bezier(0.14, 0.47, 0.2, 1.15) infinite;
       border-radius: 50%;
-      border: 1px solid #0000ff;
+      border: 1px solid rgba(#d0d0dd, 0.5);
+    }
+    &::after {
+      position: absolute;
+      content: "";
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: loading-last 1.5s cubic-bezier(0.14, 0.47, 0.2, 1.15) infinite;
+      border-radius: 50%;
+      border: 1px solid rgba(#d0d0dd, 0.5);
     }
   }
 }
@@ -80,7 +56,7 @@ export default {
   }
 
   50% {
-    transform: scale(1.5);
+    transform: scale(60);
     opacity: 1;
   }
 
@@ -95,7 +71,7 @@ export default {
     opacity: 0;
   }
   50% {
-    transform: scale(1.5);
+    transform: scale(70);
     opacity: 1;
   }
   100% {

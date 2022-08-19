@@ -292,6 +292,8 @@ export default {
         background-repeat: no-repeat;
       }
       @media (max-width: 850px) {
+        min-width: 290px;
+
         max-width: 500px;
         margin-bottom: 15px;
       }

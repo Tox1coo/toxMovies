@@ -45,17 +45,17 @@ import Tabs from "@/components/UI/Tabs.vue";
 import ImagesBlock from "@/components/homePage/PageType/ImagesBlock.vue";
 import CreditPerson from "@/components/homePage/PageType/Person/CreditPerson.vue";
 import KnowForPerson from "@/components/homePage/PageType/Person/KnowForPerson.vue";
-
+import { mapMutations } from "vuex";
 export default {
   name: "PagePerson",
   computed: {
     ...mapState({
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
+      isLoading: (state) => state.movies.isLoading,
     }),
   },
   data() {
     return {
-      isLoading: false,
       personInfo: {},
       currentTab: {
         title: "Known For",
@@ -82,20 +82,29 @@ export default {
     };
   },
   methods: {
+    ...mapMutations({
+      setIsLoading: "movies/setIsLoading",
+      updateError: "movies/updateError",
+    }),
     setCurrentTab(currentTab) {
       this.prevTab = this.currentTab;
       this.currentTab = currentTab;
     },
   },
+  beforeUnmount() {
+    this.setIsLoading(false);
+  },
   async created() {
     try {
       this.personInfo = await getPersonInfo(this.$route.params.id);
     } catch (error) {
-      console.log(error);
+      this.$router.push("/notfound");
+      this.updateError("Page not found");
     } finally {
-      this.isLoading = true;
+      this.setIsLoading(true);
     }
   },
+
   components: {
     PersonOverview,
     Tabs,
@@ -120,14 +129,16 @@ export default {
       gap: 30px;
       align-items: center;
     }
+    @media (max-width: 1024px) {
+      margin-top: 25px;
+    }
   }
 
   &__img {
     max-width: 300px;
     min-height: 350px;
-
+    min-width: 300px;
     max-height: 450px;
-
     position: relative;
     img {
       position: relative;

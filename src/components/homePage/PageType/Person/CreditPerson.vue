@@ -1,8 +1,13 @@
 <template>
   <div class="person__credits">
-    <DropList v-model:sortedItem="sortedItem" :list="typeList"></DropList>
+    <div class="person__credits-drop">
+      <DropList v-model:sortedItem="sortedItem" :list="typeList"></DropList>
 
-    <DropList v-model:sortedItem="sortedItemMedia" :list="typeMedia"></DropList>
+      <DropList
+        v-model:sortedItem="sortedItemMedia"
+        :list="typeMedia"
+      ></DropList>
+    </div>
 
     <div class="person__credits-list">
       <h3>Sorted for: {{ sortedItem }}</h3>
@@ -96,6 +101,9 @@ export default {
     flex-direction: column;
     gap: 15px;
   }
+  &-drop {
+    display: flex;
+  }
 }
 
 .credits {
@@ -110,11 +118,7 @@ export default {
   @media (max-width: 710px) {
     gap: 0px;
   }
-  @media (max-width: 570px) {
-    & .drop {
-      width: 150px;
-    }
-  }
+
   align-items: center;
   &__year {
     min-width: 70px;
