@@ -3,8 +3,10 @@
     <div class="season__inner">
       <div v-if="!visibleEpisodeList" class="season__inner-season">
         <SeasonBlockList
-          v-for="season in seasonInfo"
+          v-for="(season, index) in seasonInfo"
           :key="season.id"
+          :indexItem="index"
+          :visibleIndex="visibleItem"
           :seasonInfo="season"
           @showEpisodes="showEpisodes"
         ></SeasonBlockList>
@@ -15,10 +17,17 @@
           :seasonEpisodes="seasonInfo[season - 1].episodes"
         ></EpisodeBlock>
       </div>
+      <div
+        v-if="seasonInfo.length > 0"
+        v-intersection="loadMore"
+        class="observer"
+      ></div>
     </div>
   </div>
 </template>
 <script>
+import intersection from "@/components/directives/VIntersection";
+import lazyLoading from "@/mixins/lazyLoading.js";
 import SeasonBlockList from "@/components/homePage/PageType/SeasonBlockList.vue";
 import EpisodeBlock from "@/components/homePage/PageType/EpisodeBlock.vue";
 import { getEpisodesTVShows } from "@/api";
@@ -30,6 +39,11 @@ export default {
       seasonInfo: [],
     };
   },
+
+  props: {
+    tvShow: { type: Object, required: true },
+  },
+
   async created() {
     const length = this.tvShow.number_of_seasons;
     let seasonList = [];
@@ -40,10 +54,14 @@ export default {
     }
   },
 
-  components: { SeasonBlockList, EpisodeBlock },
-  props: {
-    tvShow: { type: Object, required: true },
+  directives: {
+    intersection,
   },
+
+  mixins: [lazyLoading],
+
+  components: { SeasonBlockList, EpisodeBlock },
+
   methods: {
     async showEpisodes(config) {
       this.visibleEpisodeList = config.visibleEpisodeList;

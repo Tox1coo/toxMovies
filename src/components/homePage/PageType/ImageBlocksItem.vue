@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="indexItem < visibleIndex"
     @click="
       $emit('showModal', {
         modal: true,
@@ -14,6 +15,8 @@
 </template>
 
 <script>
+import lazyLoadingItem from "@/mixins/lazyLoadingItem";
+
 import { mapState } from "vuex";
 export default {
   data() {
@@ -31,6 +34,8 @@ export default {
       default: 0,
     },
   },
+  mixins: [lazyLoadingItem],
+
   mounted() {
     this.getImageURL();
   },

@@ -12,7 +12,7 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
-        <h2 v-else-if="trailerURL?.error">Трейлера нет</h2>
+        <h2 v-else-if="trailerURL?.error">Trailer not found</h2>
         <div @click="isShowTrailer(false)" class="close"></div>
       </div>
     </Transition>

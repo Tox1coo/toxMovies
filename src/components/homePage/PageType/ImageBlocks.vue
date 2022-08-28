@@ -1,7 +1,7 @@
 <template functionality>
   <div class="image__inner-top">
     <h2 class="title title--image">{{ titleBlock.toUpperCase() }}</h2>
-    <span>{{ imageList.length }} фото</span>
+    <span>{{ imageList.length }} photos</span>
   </div>
 
   <div class="image__blocks">
@@ -9,9 +9,12 @@
       v-for="(imageItem, index) in imageList"
       :key="index"
       :imageItem="imageItem"
+      :indexItem="index"
+      :visibleIndex="visibleItem"
       :indexImage="index"
       @showModal="getShowModal"
     ></ImageBlocksItem>
+    <div v-intersection="loadMore" class="observer"></div>
   </div>
   <ModalSlider
     v-if="showModal"
@@ -25,6 +28,9 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
+import intersection from "@/components/directives/VIntersection";
+import lazyLoading from "@/mixins/lazyLoading.js";
+
 import ImageBlocksItem from "@/components/homePage/PageType/ImageBlocksItem.vue";
 export default {
   data() {
@@ -41,6 +47,10 @@ export default {
     },
     titleBlock: String,
   },
+  directives: {
+    intersection,
+  },
+  mixins: [lazyLoading],
   methods: {
     getShowModal(info) {
       this.showModal = info.modal;

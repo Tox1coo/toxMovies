@@ -34,12 +34,12 @@
         :mediaTypeList="pageItem.similar.results"
         :media="$route.params.media"
         :showIsAll="false"
-        :title="'Посмотреть еще'"
+        :title="'See more'"
       ></CategoryList>
     </div>
   </div>
 </template>
-<!-- TODO: проверить правильность выбора трейлера после перехода по ссылке на фильмах и сериалах 'Посмотреть еще' -->
+
 <script>
 import BackDropBlock from "@/components/BackDropBlock";
 import { getMovie, getTVShow } from "@/api";

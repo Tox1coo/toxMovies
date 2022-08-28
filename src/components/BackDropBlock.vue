@@ -117,7 +117,7 @@ export default {
     }),
 
     getImage() {
-      return `${this.IMAGE_URL}/w780${this.currentItem?.backdrop_path}`;
+      return `${this.IMAGE_URL}/original${this.currentItem?.backdrop_path}`;
     },
     getTrailerItem() {
       return getTrailer(this.currentItem);
@@ -200,7 +200,8 @@ export default {
       order: 1;
     }
     &-img {
-      height: calc(100% - 1px);
+      height: auto;
+      max-height: calc(100% - 1px);
 
       width: 100%;
       position: relative;

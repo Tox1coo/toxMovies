@@ -1,17 +1,22 @@
 <template functionality>
   <div class="episode">
-    <button class="back" @click="$emit('backToSeasons', false)">Назад</button>
+    <button class="back" @click="$emit('backToSeasons', false)">Back</button>
     <div class="episode__inner">
       <EpisodeBlockItem
-        v-for="episode in seasonEpisodes"
+        v-for="(episode, index) in seasonEpisodes"
         :key="episode.id"
+        :indexItem="index"
+        :visibleIndex="visibleItem"
         :episode="episode"
       ></EpisodeBlockItem>
+      <div v-intersection="loadMore" class="observer"></div>
     </div>
   </div>
 </template>
 
 <script>
+import intersection from "@/components/directives/VIntersection";
+import lazyLoading from "@/mixins/lazyLoading.js";
 import EpisodeBlockItem from "@/components/homePage/PageType/EpisodeBlockItem.vue";
 export default {
   props: {
@@ -21,6 +26,12 @@ export default {
       required: true,
     },
   },
+
+  directives: {
+    intersection,
+  },
+  mixins: [lazyLoading],
+
   components: { EpisodeBlockItem },
 };
 </script>

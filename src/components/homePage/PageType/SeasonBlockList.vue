@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="indexItem < visibleIndex"
     @click="
       $emit('showEpisodes', {
         visibleEpisodeList: true,
@@ -16,13 +17,9 @@
 </template>
 
 <script>
+import lazyLoadingItem from "@/mixins/lazyLoadingItem";
 import { mapState } from "vuex";
 export default {
-  computed: {
-    ...mapState({
-      IMAGE_URL: (state) => state.movies.IMAGE_URL,
-    }),
-  },
   props: {
     seasonInfo: {
       type: Object,
@@ -30,6 +27,13 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapState({
+      IMAGE_URL: (state) => state.movies.IMAGE_URL,
+    }),
+  },
+
+  mixins: [lazyLoadingItem],
   emits: ["showEpisodes"],
 };
 </script>

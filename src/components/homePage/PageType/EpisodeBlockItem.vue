@@ -1,5 +1,5 @@
 <template>
-  <div class="episode__block-item">
+  <div v-if="indexItem < visibleIndex" class="episode__block-item">
     <div class="episode__block-img">
       <img
         v-if="episode?.still_path != null || episode?.still_path != undefined"
@@ -36,6 +36,8 @@
 </template>
 <!-- сделать проверку на null -->
 <script>
+import lazyLoadingItem from "@/mixins/lazyLoadingItem";
+
 import { mapState } from "vuex";
 export default {
   props: {
@@ -50,6 +52,8 @@ export default {
       IMAGE_URL: (state) => state.movies.IMAGE_URL,
     }),
   },
+  mixins: [lazyLoadingItem],
+
   methods: {
     trimText(text, length, end = "") {
       let index = text.indexOf(" ", length);

@@ -142,7 +142,7 @@ export default {
     position: relative;
     img {
       position: relative;
-      z-index: 1000;
+      z-index: 998;
       height: 100%;
       @media (max-width: 900px) {
         width: 100%;

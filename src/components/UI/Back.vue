@@ -1,5 +1,5 @@
 <template functionality>
-  <a @click="$router.go(-1)" class="back">Назад</a>
+  <a @click="$router.go(-1)" class="back">Back</a>
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
 
 <style lang="scss" scoped>
 .back {
-  color: #dadada;
+  color: #999;
   font-size: 18px;
   position: absolute;
   z-index: 999;
@@ -23,8 +23,8 @@ export default {
     display: inline-block;
     width: 13px;
     height: 13px;
-    border-left: 1px solid #dadada;
-    border-top: 1px solid #dadada;
+    border-left: 1px solid #999;
+    border-top: 1px solid #999;
     margin-right: 5px;
     transform: rotate(310deg);
   }
@@ -51,8 +51,6 @@ export default {
     right: 20px;
     top: 60px !important;
     left: auto;
-  }
-  &--item {
   }
 }
 </style>
